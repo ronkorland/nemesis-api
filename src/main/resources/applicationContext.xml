@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
+	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:component-scan base-package="com.nemesis.api;org.codehaus.jackson.jaxrs" />
+
+	<context:annotation-config />
+
+	<!-- MongoTemplate for connecting and quering the documents in the database -->
+	<mongo:db-factory host="localhost" port="27017"
+		dbname="automation" />
+	<mongo:mapping-converter id="converter"
+		db-factory-ref="mongoDbFactory" />
+
+	<!-- MongoDB GridFS Template -->
+	<bean id="gridTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+		<constructor-arg ref="mongoDbFactory" />
+		<constructor-arg ref="converter" />
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<bean id="summaryTestsReportJobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.rk.api.scheduler.SummaryTestsReportJob" />
+		<property name="durability" value="true" />
+	</bean>
+	
+	<bean id="firstTrigger" class="com.rk.api.scheduler.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail" ref="summaryTestsReportJobDetail" />
+		<!-- 0 0 5 * * ? run every morning at 5:00 AM -->
+		<!-- 0/5 * * * * ? run every 5 seconds -->
+		<property name="cronExpression" value="0 0 8 * * ?" />
+	</bean>
+
+	<bean id="quartzScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+
+		<!-- This name is persisted as SCHED_NAME in db. for local testing could 
+			change to unique name to avoid collision with dev server -->
+		<property name="schedulerName" value="quartzScheduler" />
+
+		<!-- Will update database cron triggers to what is in this jobs file on 
+			each deploy. Replaces all previous trigger and job data that was in the database. 
+			YMMV -->
+		<property name="overwriteExistingJobs" value="true" />
+
+		<property name="autoStartup" value="true" />
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+		<property name="jobFactory">
+			<bean class="com.nemesis.api.scheduler.AutowiringSpringBeanJobFactory" />
+		</property>
+
+		<!-- NOTE: Must add both the jobDetail and trigger to the scheduler! -->
+		<property name="jobDetails">
+			<list>
+				<ref bean="summaryTestsReportJobDetail" />
+			</list>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="firstTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>
