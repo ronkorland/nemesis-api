@@ -19,6 +19,10 @@ public class TestFilter {
 	private String startDate;
 
 	private String status;
+	
+	public TestFilter(){
+		
+	}
 
 	public TestFilter(int pageSize, int pageNumber, String sortedBy,
 			String sortDir, String method, String status) {

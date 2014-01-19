@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.nemesis.api.data.SummaryData;
 import com.nemesis.api.data.TestData;
+import com.nemesis.api.data.TestHistoryListData;
 import com.nemesis.api.data.TestMethodData;
 import com.nemesis.api.data.TestsData;
 import com.nemesis.api.filter.TestFilter;
@@ -35,12 +36,14 @@ public class TestResourceImpl implements TestResource {
 
 	@GET
 	@Path("/{testId}")
+	@Override
 	public Response getTestById(@PathParam("testId") String testId) {
 		TestData data = testService.findById(testId);
 		return Response.ok(data).build();
 	}
 
 	@GET
+	@Override
 	public Response getTests(@QueryParam("pageSize") int pageSize,
 			@QueryParam("pageNumber") int pageNumber,
 			@QueryParam("method") String method,
@@ -58,6 +61,7 @@ public class TestResourceImpl implements TestResource {
 
 	@GET
 	@Path("/suite/{suiteId}")
+	@Override
 	public Response getTestsBySuiteId(@PathParam("suiteId") String suiteId,
 			@QueryParam("pageSize") int pageSize,
 			@QueryParam("pageNumber") int pageNumber,
@@ -73,6 +77,7 @@ public class TestResourceImpl implements TestResource {
 
 	@GET
 	@Path("/suite/{suiteId}/method")
+	@Override
 	public Response getMethodsBySuiteId(@PathParam("suiteId") String suiteId) {
 		List<TestMethodData> datas = testService.getMethodsBySuiteId(suiteId);
 		if (datas != null) {
@@ -84,24 +89,28 @@ public class TestResourceImpl implements TestResource {
 
 	@GET
 	@Path("/method")
+	@Override
 	public Response getSuiteName() {
 		List<TestMethodData> methods = testService.getMethods();
 		return Response.ok(methods).build();
 	}
 
 	@PUT
+	@Override
 	public Response updateTest(TestData testData) {
 		TestData data = testService.update(testData);
 		return Response.ok(data).build();
 	}
 
 	@DELETE
+	@Override
 	public Response deleteTest(TestData testData) {
 		TestData data = testService.delete(testData);
 		return Response.ok(data).build();
 	}
 
 	@POST
+	@Override
 	public Response addTest(TestData testData) {
 		TestData data = testService.create(testData);
 		return Response.ok(data).build();
@@ -109,8 +118,21 @@ public class TestResourceImpl implements TestResource {
 
 	@GET
 	@Path("/last/24/summary")
+	@Override
 	public Response getLast24HoursSummary() {
 		SummaryData summaryData = testService.findLast24HoursSummary();
 		return Response.ok(summaryData).build();
+	}
+
+	@GET
+	@Path("/{testId}/history")
+	@Override
+	public Response getTestHistory(@PathParam("testId") String testId) {
+		TestHistoryListData historyListData = testService
+				.getTestHistory(testId);
+		if (historyListData == null) {
+			Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok(historyListData).build();
 	}
 }

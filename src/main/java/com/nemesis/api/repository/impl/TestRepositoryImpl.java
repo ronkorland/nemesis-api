@@ -26,6 +26,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.DBCollection;
 import com.nemesis.api.filter.TestFilter;
+import com.nemesis.api.filter.TestHistoryFilter;
 import com.nemesis.api.model.Test;
 import com.nemesis.api.repository.TestRepository;
 
@@ -137,9 +138,9 @@ public class TestRepositoryImpl implements TestRepository {
 			DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 			LocalDate startDate = dtf.parseLocalDate(filter.getStartDate());
 
-			criteria = where("startTime")
-					.gte(startDate.toDateTime(LocalTime.MIDNIGHT))
-					.lt(startDate.toDateTime(new LocalTime(23, 59, 59)));
+			criteria = where("startTime").gte(
+					startDate.toDateTime(LocalTime.MIDNIGHT)).lt(
+					startDate.toDateTime(new LocalTime(23, 59, 59)));
 
 			if (StringUtils.isNotBlank(filter.getStatus())) {
 				criteria.and("testStatus").is(filter.getStatus());
@@ -234,5 +235,21 @@ public class TestRepositoryImpl implements TestRepository {
 			return mongoTemplate.find(filterToQuery(filter), Test.class);
 		}
 		return null;
+	}
+
+	@Override
+	public List<Test> getTestHistory(TestHistoryFilter filter) {
+		if (filter.isEmpty()) {
+			return null;
+		}
+
+		Criteria criteria = where("className").is(filter.getClassName())
+				.and("method").is(filter.getMethod());
+		
+		Query query = new Query();
+		query.addCriteria(criteria);
+		query.with(sort("startTime", "desc"));
+		query.limit(20);
+		return mongoTemplate.find(query, Test.class);
 	}
 }

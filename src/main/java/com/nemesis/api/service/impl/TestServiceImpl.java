@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 import com.nemesis.api.constants.Status;
 import com.nemesis.api.data.SummaryData;
 import com.nemesis.api.data.TestData;
+import com.nemesis.api.data.TestHistoryData;
+import com.nemesis.api.data.TestHistoryListData;
 import com.nemesis.api.data.TestMethodData;
 import com.nemesis.api.data.TestsData;
 import com.nemesis.api.filter.TestFilter;
+import com.nemesis.api.filter.TestHistoryFilter;
 import com.nemesis.api.model.Suite;
 import com.nemesis.api.model.Test;
 import com.nemesis.api.repository.SuiteRepository;
@@ -127,16 +130,16 @@ public class TestServiceImpl implements TestService {
 		}
 		return datas;
 	}
-	
+
 	@Override
 	public SummaryData findLast24HoursSummary() {
 		List<Test> tests = testRepository.findLast24Hours();
 		SummaryData summaryData = new SummaryData();
 		int amountOfFailed = 0;
-		
+
 		if (tests != null && tests.size() > 0) {
 			for (Test test : tests) {
-				if(test.getTestStatus() == Status.FAILURE){
+				if (test.getTestStatus() == Status.FAILURE) {
 					amountOfFailed++;
 				}
 			}
@@ -158,5 +161,35 @@ public class TestServiceImpl implements TestService {
 			}
 		}
 		return datas;
+	}
+
+	@Override
+	public TestHistoryListData getTestHistory(String testId) {
+		Test testMain = null;
+		testMain = testRepository.findById(testId);
+		if (testMain == null) {
+			return null;
+		}
+		String className = testMain.getClassName();
+		String methodName = testMain.getMethod();
+		TestHistoryFilter filter = new TestHistoryFilter(className, methodName);
+		List<Test> testList = testRepository.getTestHistory(filter);
+
+		if (testList != null && testList.size() > 0) {
+			List<TestHistoryData> testHistoryList = new ArrayList<TestHistoryData>();
+			for (Test test : testList) {
+				TestHistoryData historyData = new TestHistoryData(test);
+				if (test.getId().equals(testId)) {
+					historyData.setMe(true);
+				}
+				testHistoryList.add(historyData);
+			}
+
+			TestHistoryListData historyListData = new TestHistoryListData();
+			historyListData.setTests(testHistoryList);
+			historyListData.setTotal(testHistoryList.size());
+			return historyListData;
+		}
+		return null;
 	}
 }

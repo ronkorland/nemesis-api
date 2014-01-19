@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nemesis.api.data.SummaryData;
 import com.nemesis.api.data.TestData;
+import com.nemesis.api.data.TestHistoryListData;
 import com.nemesis.api.data.TestMethodData;
 import com.nemesis.api.data.TestsData;
 import com.nemesis.api.filter.TestFilter;
@@ -25,4 +26,6 @@ public interface TestService {
 	public List<TestMethodData> getMethods();
 
 	public SummaryData findLast24HoursSummary();
+	
+	public TestHistoryListData getTestHistory(String testId);
 }
