@@ -31,11 +31,11 @@
 
 	<bean id="summaryTestsReportJobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="jobClass" value="com.rk.api.scheduler.SummaryTestsReportJob" />
+		<property name="jobClass" value="com.nemesis.api.scheduler.SummaryTestsReportJob" />
 		<property name="durability" value="true" />
 	</bean>
 	
-	<bean id="firstTrigger" class="com.rk.api.scheduler.PersistableCronTriggerFactoryBean">
+	<bean id="firstTrigger" class="com.nemesis.api.scheduler.PersistableCronTriggerFactoryBean">
 		<property name="jobDetail" ref="summaryTestsReportJobDetail" />
 		<!-- 0 0 5 * * ? run every morning at 5:00 AM -->
 		<!-- 0/5 * * * * ? run every 5 seconds -->
