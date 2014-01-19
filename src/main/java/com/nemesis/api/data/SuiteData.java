@@ -49,10 +49,10 @@ public class SuiteData extends BaseData {
 		setStartTime(suite.getStartTime());
 		setSuiteStatus(suite.getSuiteStatus());
 		clacRunningTime();
-		calcHtmlStatus();
+		calcStatus();
 	}
 	
-	private void calcHtmlStatus(){
+	private void calcStatus(){
 		if (getNumberOfFails() > 0 || getNumberOfSkips() > 0) {
 			setHtmlStatus("<span class='label-status-FAILURE'>Failed: "
 					+ getNumberOfFails()
@@ -60,6 +60,7 @@ public class SuiteData extends BaseData {
 					+ getNumberOfSkips() + "</span>");
 			setSuiteStatus(Status.FAILURE);
 		} else {
+			setSuiteStatus(Status.SUCCESS);
 			setHtmlStatus("<span class='label-status-SUCCESS'>"
 					+ Status.SUCCESS + "</span>");
 		}
