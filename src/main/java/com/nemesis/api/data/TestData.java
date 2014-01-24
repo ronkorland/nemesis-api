@@ -35,6 +35,8 @@ public class TestData extends BaseData {
 	private LocalDateTime endTime;
 
 	private String runningTime;
+	
+	private long durationSec;
 
 	private List<TestParameterData> parameters;
 
@@ -89,6 +91,7 @@ public class TestData extends BaseData {
 		if (getEndTime() != null && getStartTime() != null) {
 			Duration dur = new Duration(getStartTime().toDateTime(),
 					getEndTime().toDateTime());
+			setDurationSec(dur.getStandardSeconds());
 			Period p = dur.toPeriod();
 			setRunningTime(p.getHours() + ":" + p.getMinutes() + ":"
 					+ p.getSeconds());
@@ -191,6 +194,14 @@ public class TestData extends BaseData {
 
 	public void setSuiteId(String suiteId) {
 		this.suiteId = suiteId;
+	}
+
+	public long getDurationSec() {
+		return durationSec;
+	}
+
+	public void setDurationSec(long durationSec) {
+		this.durationSec = durationSec;
 	}
 
 }
