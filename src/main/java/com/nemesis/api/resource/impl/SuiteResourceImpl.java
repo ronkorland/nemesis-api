@@ -35,12 +35,14 @@ public class SuiteResourceImpl implements SuiteResource {
 
 	@GET
 	@Path("/names")
+	@Override
 	public Response getSuiteName() {
 		List<SuiteNameData> names = suiteService.getSuiteNames();
 		return Response.ok(names).build();
 	}
 
 	@GET
+	@Override
 	public Response getSuites(@QueryParam("pageSize") int pageSize,
 			@QueryParam("pageNumber") int pageNumber,
 			@QueryParam("suiteName") String suiteName,
@@ -58,6 +60,7 @@ public class SuiteResourceImpl implements SuiteResource {
 
 	@GET
 	@Path("/last/24/distinct")
+	@Override
 	public Response getLast24HoursDistinct() {
 		SuitesData suiteDataList = suiteService.findLast24HoursDistinct();
 		return Response.ok(suiteDataList).build();
@@ -65,13 +68,15 @@ public class SuiteResourceImpl implements SuiteResource {
 
 	@GET
 	@Path("/last/24")
+	@Override
 	public Response getLast24Hours() {
 		SuitesData suiteDataList = suiteService.findLast24Hours();
 		return Response.ok(suiteDataList).build();
 	}
-	
+
 	@GET
 	@Path("/last/24/summary")
+	@Override
 	public Response getLast24HoursSummary() {
 		SummaryData summaryData = suiteService.findLast24HoursSummary();
 		return Response.ok(summaryData).build();
@@ -79,6 +84,7 @@ public class SuiteResourceImpl implements SuiteResource {
 
 	@GET
 	@Path("/before/{days}")
+	@Override
 	public Response findSuitesBeforeXDays(@PathParam("days") int days) {
 		SuitesData suiteDataList = suiteService.findSuiteBefore(days);
 		return Response.ok(suiteDataList).build();
@@ -86,24 +92,28 @@ public class SuiteResourceImpl implements SuiteResource {
 
 	@GET
 	@Path("/{suiteId}")
+	@Override
 	public Response getSuiteById(@PathParam("suiteId") String suiteId) {
 		SuiteData suiteData = suiteService.findById(suiteId);
 		return Response.ok(suiteData).build();
 	}
 
 	@POST
+	@Override
 	public Response createSuite(SuiteData suiteData) {
 		SuiteData returnData = suiteService.create(suiteData);
 		return Response.ok(returnData).build();
 	}
 
 	@PUT
+	@Override
 	public Response updateSuite(SuiteData suiteData) {
 		SuiteData data = suiteService.update(suiteData);
 		return Response.ok(data).build();
 	}
 
 	@DELETE
+	@Override
 	public Response deleteSuite(SuiteData suiteData) {
 		SuiteData returnData = suiteService.delete(suiteData);
 		return Response.ok(returnData).build();

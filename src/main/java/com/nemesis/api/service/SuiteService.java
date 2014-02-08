@@ -20,10 +20,6 @@ public interface SuiteService {
 
 	public SuiteData delete(SuiteData suiteData);
 
-	public void createSuiteCollection();
-
-	public void dropSuiteCollection();
-
 	public SuiteData create(SuiteData suiteData);
 
 	public SuitesData findAllSuites(SuiteFilter filter);

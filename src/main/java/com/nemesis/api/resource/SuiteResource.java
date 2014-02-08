@@ -32,4 +32,8 @@ public interface SuiteResource {
 
 	public Response deleteSuite(SuiteData suiteData);
 
+	public Response getLast24HoursDistinct();
+
+	public Response getLast24HoursSummary();
+
 }

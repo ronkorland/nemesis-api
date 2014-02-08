@@ -237,16 +237,6 @@ public class SuiteServiceImpl implements SuiteService {
 	}
 
 	@Override
-	public void createSuiteCollection() {
-		suiteRepository.createSuiteCollection();
-	}
-
-	@Override
-	public void dropSuiteCollection() {
-		suiteRepository.dropSuiteCollection();
-	}
-
-	@Override
 	public List<SuiteNameData> getSuiteNames() {
 		List<SuiteNameData> names = new ArrayList<SuiteNameData>();
 		List<String> namesString = suiteRepository.getSuiteNames();

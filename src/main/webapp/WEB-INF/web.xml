@@ -50,11 +50,11 @@
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedMethods</param-name>
-			<param-value>GET, HEAD, POST, OPTIONS</param-value>
+			<param-value>GET, POST, HEAD, PUT, DELETE</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedHeaders</param-name>
-			<param-value>Content-Type, X-Requested-With</param-value>
+			<param-value>*</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cors.supportsCredentials</param-name>

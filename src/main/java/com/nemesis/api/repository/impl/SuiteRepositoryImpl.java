@@ -108,9 +108,12 @@ public class SuiteRepositoryImpl implements SuiteRepository {
 	public Suite update(Suite suite) {
 		try {
 			Suite findSuite = findById(suite.getId());
-			Suite mergeSuite = findSuite.merge(suite);
-			mongoTemplate.save(mergeSuite);
-			return mergeSuite;
+			if (findSuite != null) {
+				Suite mergeSuite = findSuite.merge(suite);
+				return save(mergeSuite);
+			} else {
+				return null;
+			}
 		} catch (Throwable t) {
 			return null;
 		}
@@ -130,20 +133,6 @@ public class SuiteRepositoryImpl implements SuiteRepository {
 	public Suite delete(Suite suite) {
 		mongoTemplate.remove(suite);
 		return suite;
-	}
-
-	@Override
-	public void createSuiteCollection() {
-		if (!mongoTemplate.collectionExists(Suite.class)) {
-			mongoTemplate.createCollection(Suite.class);
-		}
-	}
-
-	@Override
-	public void dropSuiteCollection() {
-		if (mongoTemplate.collectionExists(Suite.class)) {
-			mongoTemplate.dropCollection(Suite.class);
-		}
 	}
 
 	@SuppressWarnings("unchecked")

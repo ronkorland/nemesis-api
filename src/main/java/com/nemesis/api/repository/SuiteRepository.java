@@ -30,8 +30,4 @@ public interface SuiteRepository {
 	public long countLast24Hours();
 
 	public List<Suite> findSuiteBefore(int days);
-
-	public void createSuiteCollection();
-
-	public void dropSuiteCollection();
 }
