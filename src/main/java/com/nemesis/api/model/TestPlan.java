@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import org.joda.time.LocalDateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.nemesis.api.data.TestPlanData;
+import com.nemesis.api.data.test.TestPlanData;
 
 @Document(collection = "testPlans")
 public class TestPlan extends BaseModel {

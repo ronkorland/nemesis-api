@@ -1,4 +1,4 @@
-package com.nemesis.api.data;
+package com.nemesis.api.data.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
 import com.nemesis.api.constants.Status;
+import com.nemesis.api.data.BaseData;
 import com.nemesis.api.model.Test;
 import com.nemesis.api.model.TestParameter;
 import com.nemesis.api.type.JodaDateTimeDeserializer;

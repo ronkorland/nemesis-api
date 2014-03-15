@@ -1,6 +1,6 @@
 package com.nemesis.api.service;
 
-import com.nemesis.api.data.TestAttachmentData;
+import com.nemesis.api.data.test.TestAttachmentData;
 
 public interface TestAttachmentService {
 

@@ -2,11 +2,11 @@ package com.nemesis.api.service;
 
 import java.util.List;
 
-import com.nemesis.api.data.SummaryData;
-import com.nemesis.api.data.TestData;
-import com.nemesis.api.data.TestHistoryListData;
-import com.nemesis.api.data.TestMethodData;
-import com.nemesis.api.data.TestsData;
+import com.nemesis.api.data.summary.SummaryData;
+import com.nemesis.api.data.test.TestData;
+import com.nemesis.api.data.test.TestHistoryListData;
+import com.nemesis.api.data.test.TestMethodData;
+import com.nemesis.api.data.test.TestsData;
 import com.nemesis.api.filter.TestFilter;
 
 public interface TestService {

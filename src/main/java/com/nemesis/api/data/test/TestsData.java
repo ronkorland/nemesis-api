@@ -1,4 +1,4 @@
-package com.nemesis.api.data;
+package com.nemesis.api.data.test;
 
 import java.util.ArrayList;
 import java.util.List;

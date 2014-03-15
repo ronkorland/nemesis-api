@@ -17,10 +17,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nemesis.api.data.SuiteData;
-import com.nemesis.api.data.SuiteNameData;
-import com.nemesis.api.data.SuitesData;
-import com.nemesis.api.data.SummaryData;
+import com.nemesis.api.data.suite.SuiteData;
+import com.nemesis.api.data.suite.SuiteNameData;
+import com.nemesis.api.data.suite.SuitesData;
+import com.nemesis.api.data.summary.SummaryData;
 import com.nemesis.api.filter.SuiteFilter;
 import com.nemesis.api.resource.SuiteResource;
 import com.nemesis.api.service.SuiteService;

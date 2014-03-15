@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.nemesis.api.constants.Status;
-import com.nemesis.api.data.SuiteData;
+import com.nemesis.api.data.suite.SuiteData;
 
 @Document(collection = "suites")
 public class Suite extends BaseModel {

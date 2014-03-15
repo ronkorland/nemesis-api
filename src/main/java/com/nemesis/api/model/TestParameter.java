@@ -1,6 +1,6 @@
 package com.nemesis.api.model;
 
-import com.nemesis.api.data.TestParameterData;
+import com.nemesis.api.data.test.TestParameterData;
 
 public class TestParameter {
 

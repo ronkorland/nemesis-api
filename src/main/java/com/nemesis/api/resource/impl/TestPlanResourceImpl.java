@@ -13,8 +13,8 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nemesis.api.data.TestPlanData;
-import com.nemesis.api.data.TestPlansData;
+import com.nemesis.api.data.test.TestPlanData;
+import com.nemesis.api.data.test.TestPlansData;
 import com.nemesis.api.resource.TestPlanResource;
 import com.nemesis.api.service.TestPlanService;
 

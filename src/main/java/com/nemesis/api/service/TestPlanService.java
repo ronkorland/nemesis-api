@@ -1,7 +1,7 @@
 package com.nemesis.api.service;
 
-import com.nemesis.api.data.TestPlanData;
-import com.nemesis.api.data.TestPlansData;
+import com.nemesis.api.data.test.TestPlanData;
+import com.nemesis.api.data.test.TestPlansData;
 
 public interface TestPlanService {
 

@@ -8,8 +8,8 @@ import org.joda.time.LocalDateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.nemesis.api.constants.Status;
-import com.nemesis.api.data.TestData;
-import com.nemesis.api.data.TestParameterData;
+import com.nemesis.api.data.test.TestData;
+import com.nemesis.api.data.test.TestParameterData;
 
 @Document(collection = "tests")
 public class Test extends BaseModel {

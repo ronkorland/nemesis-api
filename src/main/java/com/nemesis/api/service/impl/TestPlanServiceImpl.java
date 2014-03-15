@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.nemesis.api.data.TestPlanData;
-import com.nemesis.api.data.TestPlansData;
+import com.nemesis.api.data.test.TestPlanData;
+import com.nemesis.api.data.test.TestPlansData;
 import com.nemesis.api.model.TestPlan;
 import com.nemesis.api.repository.TestPlanRepository;
 import com.nemesis.api.service.TestPlanService;

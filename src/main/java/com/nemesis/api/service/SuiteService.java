@@ -2,12 +2,12 @@ package com.nemesis.api.service;
 
 import java.util.List;
 
-import com.nemesis.api.data.SuiteData;
-import com.nemesis.api.data.SuiteNameData;
-import com.nemesis.api.data.SuitesData;
-import com.nemesis.api.data.SummaryData;
 import com.nemesis.api.data.chart.LineChart;
 import com.nemesis.api.data.chart.PieChart;
+import com.nemesis.api.data.suite.SuiteData;
+import com.nemesis.api.data.suite.SuiteNameData;
+import com.nemesis.api.data.suite.SuitesData;
+import com.nemesis.api.data.summary.SummaryData;
 import com.nemesis.api.filter.SuiteFilter;
 
 public interface SuiteService {

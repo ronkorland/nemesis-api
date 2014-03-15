@@ -28,8 +28,8 @@ import com.hp.gagawa.java.elements.Table;
 import com.hp.gagawa.java.elements.Td;
 import com.hp.gagawa.java.elements.Th;
 import com.hp.gagawa.java.elements.Tr;
-import com.nemesis.api.data.SuiteData;
-import com.nemesis.api.data.SuitesData;
+import com.nemesis.api.data.suite.SuiteData;
+import com.nemesis.api.data.suite.SuitesData;
 import com.nemesis.api.service.SuiteService;
 
 @Component

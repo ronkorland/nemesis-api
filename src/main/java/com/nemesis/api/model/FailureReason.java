@@ -1,6 +1,6 @@
 package com.nemesis.api.model;
 
-import com.nemesis.api.data.FailureReasonData;
+import com.nemesis.api.data.test.FailureReasonData;
 
 public class FailureReason {
 

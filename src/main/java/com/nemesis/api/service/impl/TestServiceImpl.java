@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.nemesis.api.constants.Status;
-import com.nemesis.api.data.SummaryData;
-import com.nemesis.api.data.TestData;
-import com.nemesis.api.data.TestHistoryData;
-import com.nemesis.api.data.TestHistoryListData;
-import com.nemesis.api.data.TestMethodData;
-import com.nemesis.api.data.TestsData;
+import com.nemesis.api.data.summary.SummaryData;
+import com.nemesis.api.data.test.TestData;
+import com.nemesis.api.data.test.TestHistoryData;
+import com.nemesis.api.data.test.TestHistoryListData;
+import com.nemesis.api.data.test.TestMethodData;
+import com.nemesis.api.data.test.TestsData;
 import com.nemesis.api.filter.TestFilter;
 import com.nemesis.api.filter.TestHistoryFilter;
 import com.nemesis.api.model.Suite;

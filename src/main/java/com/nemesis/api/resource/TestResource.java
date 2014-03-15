@@ -2,7 +2,7 @@ package com.nemesis.api.resource;
 
 import javax.ws.rs.core.Response;
 
-import com.nemesis.api.data.TestData;
+import com.nemesis.api.data.test.TestData;
 
 public interface TestResource {
 

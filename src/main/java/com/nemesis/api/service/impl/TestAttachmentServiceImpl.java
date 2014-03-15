@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.nemesis.api.data.TestAttachmentData;
+import com.nemesis.api.data.test.TestAttachmentData;
 import com.nemesis.api.repository.StorageRepository;
 import com.nemesis.api.repository.TestRepository;
 import com.nemesis.api.service.TestAttachmentService;

@@ -17,11 +17,11 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nemesis.api.data.SummaryData;
-import com.nemesis.api.data.TestData;
-import com.nemesis.api.data.TestHistoryListData;
-import com.nemesis.api.data.TestMethodData;
-import com.nemesis.api.data.TestsData;
+import com.nemesis.api.data.summary.SummaryData;
+import com.nemesis.api.data.test.TestData;
+import com.nemesis.api.data.test.TestHistoryListData;
+import com.nemesis.api.data.test.TestMethodData;
+import com.nemesis.api.data.test.TestsData;
 import com.nemesis.api.filter.TestFilter;
 import com.nemesis.api.resource.TestResource;
 import com.nemesis.api.service.TestService;

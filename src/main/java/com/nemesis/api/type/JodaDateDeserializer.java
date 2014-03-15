@@ -14,8 +14,7 @@ public class JodaDateDeserializer extends AbstractDateDeserializer {
 
 	@Override
 	protected String getPattern() {
-		return JodaDateSerializer.FORMAT; // use same format for serialize and
-											// deserialize
+		return "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	}
 
 }

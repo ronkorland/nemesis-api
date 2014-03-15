@@ -1,4 +1,4 @@
-package com.nemesis.api.data;
+package com.nemesis.api.data.test;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDateTime;
 
+import com.nemesis.api.data.BaseData;
 import com.nemesis.api.model.TestPlan;
 import com.nemesis.api.type.JodaDateTimeDeserializer;
 import com.nemesis.api.type.JodaDateTimeSerializer;

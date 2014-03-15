@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
 
-import com.nemesis.api.data.SuiteData;
+import com.nemesis.api.data.suite.SuiteData;
 
 public interface SuiteResource {
 
