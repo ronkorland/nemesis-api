@@ -3,7 +3,6 @@ package com.nemesis.api.data.sprint;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import com.nemesis.api.data.BaseData;
 import com.nemesis.api.model.Sprint;
