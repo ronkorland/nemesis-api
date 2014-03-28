@@ -40,8 +40,12 @@ public class SuiteServiceImpl implements SuiteService {
 
 		long count = suiteRepository.count(filter);
 		suitesData.setTotal(count);
-		long totalPages = (long) Math.ceil((double) count
-				/ (double) filter.getPageSize());
+		long totalPages = 1;
+		if (filter.getPageSize() != 0) {
+			totalPages = (long) Math.ceil((double) count
+					/ (double) filter.getPageSize());
+		}
+
 		suitesData.setTotalPages(totalPages);
 
 		if (suites != null && suites.size() > 0) {
@@ -122,7 +126,7 @@ public class SuiteServiceImpl implements SuiteService {
 	}
 
 	private HashMap<LocalDate, LastActivity> calcAmountOfTestsPerDay() {
-		int amountOfDays = 10;
+		int amountOfDays = 30;
 		HashMap<LocalDate, LastActivity> map = new HashMap<LocalDate, LastActivity>();
 		for (int i = 0; i < amountOfDays; i++) {
 			LocalDate date = new LocalDate();
@@ -222,7 +226,7 @@ public class SuiteServiceImpl implements SuiteService {
 		Suite currentSuite = suiteRepository.findById(suiteData.getId());
 		Suite suite = new Suite(suiteData);
 		currentSuite = currentSuite.merge(suite);
-		
+
 		Suite returnSuite = suiteRepository.update(currentSuite);
 		SuiteData returnSuiteData = new SuiteData(returnSuite);
 		return returnSuiteData;
@@ -251,10 +255,10 @@ public class SuiteServiceImpl implements SuiteService {
 		List<Suite> suites = suiteRepository.findLast24Hours();
 		SummaryData summaryData = new SummaryData();
 		int amountOfFailed = 0;
-		
+
 		if (suites != null && suites.size() > 0) {
 			for (Suite suite : suites) {
-				if(suite.getSuiteStatus() == Status.FAILURE){
+				if (suite.getSuiteStatus() == Status.FAILURE) {
 					amountOfFailed++;
 				}
 			}

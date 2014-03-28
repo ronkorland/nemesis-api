@@ -2,12 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
 	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
 	http://www.springframework.org/schema/context 
-	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<context:component-scan base-package="com.nemesis.api;org.codehaus.jackson.jaxrs" />
 
@@ -31,11 +33,13 @@
 
 	<bean id="summaryTestsReportJobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="jobClass" value="com.nemesis.api.scheduler.SummaryTestsReportJob" />
+		<property name="jobClass"
+			value="com.nemesis.api.scheduler.SummaryTestsReportJob" />
 		<property name="durability" value="true" />
 	</bean>
-	
-	<bean id="firstTrigger" class="com.nemesis.api.scheduler.PersistableCronTriggerFactoryBean">
+
+	<bean id="firstTrigger"
+		class="com.nemesis.api.scheduler.PersistableCronTriggerFactoryBean">
 		<property name="jobDetail" ref="summaryTestsReportJobDetail" />
 		<!-- 0 0 5 * * ? run every morning at 5:00 AM -->
 		<!-- 0/5 * * * * ? run every 5 seconds -->
@@ -72,4 +76,93 @@
 			</list>
 		</property>
 	</bean>
+
+	<!-- SPRING SECURITY SETUP -->
+
+	<bean id="userService" class="com.nemesis.api.service.impl.UserServiceImpl">
+	</bean>
+
+	<bean id="passwordEncoder" class="com.nemesis.api.encoder.SaltedSHA256PasswordEncoder">
+		<constructor-arg value="secret" />
+	</bean>
+
+	<security:authentication-manager id="authenticationManager">
+		<security:authentication-provider
+			user-service-ref="userService">
+			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<security:http realm="Protected API" use-expressions="true"
+		auto-config="false" create-session="stateless" entry-point-ref="unauthorizedEntryPoint"
+		authentication-manager-ref="authenticationManager">
+		<security:custom-filter ref="authenticationTokenProcessingFilter"
+			position="FORM_LOGIN_FILTER" />
+		<security:intercept-url pattern="/api/users/login"
+			access="permitAll" />
+
+		<security:intercept-url method="GET" pattern="/api/suites/**"
+			access="hasRole('user')" />
+		<security:intercept-url method="PUT" pattern="/api/suites/**"
+			access="hasRole('admin')" />
+		<security:intercept-url method="POST" pattern="/api/suits/**"
+			access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/suites/**" access="hasRole('admin')" />
+
+		<security:intercept-url method="GET"
+			pattern="/api/suite/chart/**" access="hasRole('user')" />
+		<security:intercept-url method="PUT"
+			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+		<security:intercept-url method="POST"
+			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+
+		<security:intercept-url method="GET"
+			pattern="/api/sprints/**" access="hasRole('user')" />
+		<security:intercept-url method="PUT"
+			pattern="/api/sprints/**" access="hasRole('admin')" />
+		<security:intercept-url method="POST"
+			pattern="/api/sprints/**" access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/sprints/**" access="hasRole('admin')" />
+
+		<security:intercept-url method="GET" pattern="/api/attach/**"
+			access="hasRole('user')" />
+		<security:intercept-url method="PUT" pattern="/api/attach/**"
+			access="hasRole('admin')" />
+		<security:intercept-url method="POST" pattern="/api/attach/**"
+			access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/attach/**" access="hasRole('admin')" />
+
+		<security:intercept-url method="GET"
+			pattern="/api/testplans/**" access="hasRole('user')" />
+		<security:intercept-url method="PUT"
+			pattern="/api/testplans/**" access="hasRole('admin')" />
+		<security:intercept-url method="POST"
+			pattern="/api/testplans/**" access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/testplans/**" access="hasRole('admin')" />
+
+		<security:intercept-url method="GET"
+			pattern="/api/tests/**" access="hasRole('user')" />
+		<security:intercept-url method="PUT"
+			pattern="/api/tests/**" access="hasRole('admin')" />
+		<security:intercept-url method="POST"
+			pattern="/api/tests/**" access="hasRole('admin')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/tests/**" access="hasRole('admin')" />
+
+	</security:http>
+
+	<bean id="unauthorizedEntryPoint" class="com.nemesis.api.filter.UnauthorizedEntryPoint" />
+
+	<bean class="com.nemesis.api.filter.AuthenticationTokenProcessingFilter"
+		id="authenticationTokenProcessingFilter">
+		<constructor-arg ref="userService" />
+	</bean>
+
+
 </beans>
