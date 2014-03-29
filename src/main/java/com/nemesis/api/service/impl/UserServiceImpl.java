@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.UserData;
 import com.nemesis.api.data.user.UsersData;
+import com.nemesis.api.exception.UsernameAlreadyExistsException;
 import com.nemesis.api.model.User;
 import com.nemesis.api.repository.UserRepository;
 import com.nemesis.api.service.UserService;
@@ -42,8 +43,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserData createUser(UserData userData) {
-		userData.setPassword(passwordEncoder.encode(userData.getPassword()));
-		userRepository.create(new User(userData));
+		User user = userRepository.findUserByUsername(userData.getUsername());
+		if (user == null) {
+			userData.setPassword(passwordEncoder.encode(userData.getPassword()));
+			userRepository.create(new User(userData));
+		} else {
+			throw new UsernameAlreadyExistsException("Username "
+					+ userData.getUsername() + " already exists");
+		}
+
 		return userData;
 	}
 

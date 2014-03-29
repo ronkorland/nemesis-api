@@ -9,7 +9,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +27,7 @@ import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.TokenData;
 import com.nemesis.api.data.user.UserData;
 import com.nemesis.api.data.user.UsersData;
+import com.nemesis.api.exception.UsernameAlreadyExistsException;
 import com.nemesis.api.resource.UserResource;
 import com.nemesis.api.service.UserService;
 import com.nemesis.api.util.TokenUtils;
@@ -68,9 +72,16 @@ public class UserResourceImpl implements UserResource {
 
 	@Override
 	@POST
-	public Response createUser(UserData data) {
-		UserData retUserData = userService.createUser(data);
-		return Response.ok(retUserData).build();
+	public Response createUser(UserData data) throws JSONException {
+		try {
+			UserData retUserData = userService.createUser(data);
+			return Response.ok(retUserData).build();
+		} catch (UsernameAlreadyExistsException e) {
+			JSONObject object = new JSONObject();
+			object.append("status", "error").append("message", e.getMessage());
+			return Response.status(Status.BAD_REQUEST).entity(object).build();
+		}
+
 	}
 
 	@Override
