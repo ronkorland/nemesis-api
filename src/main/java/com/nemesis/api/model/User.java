@@ -14,7 +14,9 @@ public class User extends BaseModel {
 
 	private String password;
 
-	private List<String> roles;
+	private String email;
+
+	private List<String> permissions;
 
 	public User() {
 		super();
@@ -24,7 +26,8 @@ public class User extends BaseModel {
 		super(data);
 		setUsername(data.getUsername());
 		setPassword(data.getPassword());
-		setRoles(data.getRoles());
+		setPermissions(data.getPermissions());
+		setEmail(data.getEmail());
 	}
 
 	public String getUsername() {
@@ -43,19 +46,27 @@ public class User extends BaseModel {
 		this.password = password;
 	}
 
-	public List<String> getRoles() {
-		if (roles == null) {
-			roles = new ArrayList<String>();
+	public void addPermission(String permission) {
+		getPermissions().add(permission);
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public List<String> getPermissions() {
+		if (permissions == null) {
+			permissions = new ArrayList<String>();
 		}
-		return roles;
+		return permissions;
 	}
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-
-	public void addRole(String role) {
-		getRoles().add(role);
+	public void setPermissions(List<String> permissions) {
+		this.permissions = permissions;
 	}
 
 }

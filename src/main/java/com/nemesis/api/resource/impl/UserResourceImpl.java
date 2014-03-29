@@ -1,9 +1,10 @@
 package com.nemesis.api.resource.impl;
 
-import javax.ws.rs.FormParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -19,8 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.TokenData;
 import com.nemesis.api.data.user.UserData;
+import com.nemesis.api.data.user.UsersData;
 import com.nemesis.api.resource.UserResource;
 import com.nemesis.api.service.UserService;
 import com.nemesis.api.util.TokenUtils;
@@ -71,33 +74,17 @@ public class UserResourceImpl implements UserResource {
 	}
 
 	@Override
-	@Path("/logout")
-	@GET
-	public Response logout() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response ping() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	@POST
-	@Path("/role")
-	public Response addRole(@FormParam("username") String username,
-			@FormParam("role") String role) {
-		UserData userData = userService.addRole(username, role);
+	@Path("/permissions")
+	public Response changePermissions(MapPermissions mapPermissions) {
+		UserData userData = userService.changePermissions(mapPermissions);
 		return Response.ok(userData).build();
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Override
+	@GET
+	@Path("/current")
 	public Response getUser() {
-
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
 		Object principal = authentication.getPrincipal();
@@ -106,9 +93,24 @@ public class UserResourceImpl implements UserResource {
 			throw new WebApplicationException(401);
 		}
 		UserDetails userDetails = (UserDetails) principal;
-		// UserData data = (UserData) userDetails;
 
 		return Response.ok(userDetails).build();
+	}
+
+	@Override
+	@GET
+	public Response getUsers() {
+		UsersData usersData = userService.getUsers();
+		return Response.ok(usersData).build();
+	}
+
+	@Override
+	@DELETE
+	@Path("/{userId}")
+	public Response delete(@PathParam("userId") String userId) {
+		UserData userData = userService.delete(userId);
+
+		return Response.ok(userData).build();
 	}
 
 }

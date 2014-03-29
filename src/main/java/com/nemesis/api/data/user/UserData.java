@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nemesis.api.data.BaseData;
 import com.nemesis.api.model.User;
+import com.nemesis.api.util.GeneralUtils;
 
 public class UserData extends BaseData implements UserDetails {
 
@@ -23,7 +25,11 @@ public class UserData extends BaseData implements UserDetails {
 
 	private String password;
 
-	private List<String> roles;
+	private String email;
+
+	private List<String> permissions;
+
+	private HashMap<String, Boolean> mapPermissions;
 
 	public UserData() {
 		super();
@@ -33,7 +39,8 @@ public class UserData extends BaseData implements UserDetails {
 		super(model);
 		setUsername(model.getUsername());
 		setPassword(model.getPassword());
-		setRoles(model.getRoles());
+		setPermissions(model.getPermissions());
+		setEmail(model.getEmail());
 	}
 
 	@Override
@@ -45,21 +52,19 @@ public class UserData extends BaseData implements UserDetails {
 		this.password = password;
 	}
 
-	public List<String> getRoles() {
-		return roles;
-	}
+	public Map<String, Boolean> getMapPermissions() {
+		if (mapPermissions == null) {
+			Map<String, Boolean> permissions = new HashMap<String, Boolean>();
+			for (String permission : getPermissions()) {
+				if (StringUtils.isNotBlank(permission)) {
+					permissions.put(permission, Boolean.TRUE);
+				}
+			}
 
-	public Map<String, Boolean> getMapRoles() {
-		Map<String, Boolean> roles = new HashMap<String, Boolean>();
-		for (String role : getRoles()) {
-			roles.put(role, Boolean.TRUE);
+			return permissions;
+		} else {
+			return mapPermissions;
 		}
-
-		return roles;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
 	}
 
 	public void setUsername(String username) {
@@ -73,15 +78,17 @@ public class UserData extends BaseData implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<String> roles = this.getRoles();
+		List<String> permissions = this.getPermissions();
 
-		if (roles == null) {
+		if (permissions == null) {
 			return Collections.emptyList();
 		}
 
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-		for (String role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role));
+		for (String permission : permissions) {
+			if (StringUtils.isNotBlank(permission)) {
+				authorities.add(new SimpleGrantedAuthority(permission));
+			}
 		}
 
 		return authorities;
@@ -109,6 +116,26 @@ public class UserData extends BaseData implements UserDetails {
 	public boolean isEnabled() {
 
 		return true;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public List<String> getPermissions() {
+		if (permissions == null && mapPermissions != null) {
+			permissions = GeneralUtils
+					.convertMapPermissionsToList(mapPermissions);
+		}
+		return permissions;
+	}
+
+	public void setPermissions(List<String> permissions) {
+		this.permissions = permissions;
 	}
 
 }

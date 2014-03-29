@@ -1,5 +1,7 @@
 package com.nemesis.api.repository.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
 		if (user != null) {
 			mongoTemplate.insert(user);
 		}
-		return null;
+		return user;
 	}
 
 	@Override
@@ -39,6 +41,26 @@ public class UserRepositoryImpl implements UserRepository {
 			mongoTemplate.save(user);
 		}
 		return null;
+	}
+
+	@Override
+	public List<User> getUsers() {
+		List<User> all = mongoTemplate.findAll(User.class);
+		return all;
+	}
+
+	@Override
+	public User findById(String userId) {
+		Query query = new Query(Criteria.where("_id").is(userId));
+
+		User user = mongoTemplate.findOne(query, User.class);
+		return user;
+	}
+
+	@Override
+	public User delete(User user) {
+		mongoTemplate.remove(user);
+		return user;
 	}
 
 }

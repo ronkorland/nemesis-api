@@ -98,62 +98,63 @@
 		authentication-manager-ref="authenticationManager">
 		<security:custom-filter ref="authenticationTokenProcessingFilter"
 			position="FORM_LOGIN_FILTER" />
+			
 		<security:intercept-url pattern="/api/users/login"
 			access="permitAll" />
 
 		<security:intercept-url method="GET" pattern="/api/suites/**"
-			access="hasRole('user')" />
+			access="hasRole('view')" />
 		<security:intercept-url method="PUT" pattern="/api/suites/**"
-			access="hasRole('admin')" />
+			access="hasRole('edit')" />
 		<security:intercept-url method="POST" pattern="/api/suits/**"
-			access="hasRole('admin')" />
+			access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/suites/**" access="hasRole('admin')" />
+			pattern="/api/suites/**" access="hasRole('delete')" />
 
 		<security:intercept-url method="GET"
-			pattern="/api/suite/chart/**" access="hasRole('user')" />
+			pattern="/api/suite/chart/**" access="hasRole('view')" />
 		<security:intercept-url method="PUT"
-			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+			pattern="/api/suite/chart/**" access="hasRole('edit')" />
 		<security:intercept-url method="POST"
-			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+			pattern="/api/suite/chart/**" access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/suite/chart/**" access="hasRole('admin')" />
+			pattern="/api/suite/chart/**" access="hasRole('delete')" />
 
 		<security:intercept-url method="GET"
-			pattern="/api/sprints/**" access="hasRole('user')" />
+			pattern="/api/sprints/**" access="hasRole('view')" />
 		<security:intercept-url method="PUT"
-			pattern="/api/sprints/**" access="hasRole('admin')" />
+			pattern="/api/sprints/**" access="hasRole('edit')" />
 		<security:intercept-url method="POST"
-			pattern="/api/sprints/**" access="hasRole('admin')" />
+			pattern="/api/sprints/**" access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/sprints/**" access="hasRole('admin')" />
+			pattern="/api/sprints/**" access="hasRole('delete')" />
 
 		<security:intercept-url method="GET" pattern="/api/attach/**"
-			access="hasRole('user')" />
+			access="hasRole('view')" />
 		<security:intercept-url method="PUT" pattern="/api/attach/**"
-			access="hasRole('admin')" />
+			access="hasRole('edit')" />
 		<security:intercept-url method="POST" pattern="/api/attach/**"
-			access="hasRole('admin')" />
+			access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/attach/**" access="hasRole('admin')" />
+			pattern="/api/attach/**" access="hasRole('delete')" />
 
 		<security:intercept-url method="GET"
-			pattern="/api/testplans/**" access="hasRole('user')" />
+			pattern="/api/testplans/**" access="hasRole('view')" />
 		<security:intercept-url method="PUT"
-			pattern="/api/testplans/**" access="hasRole('admin')" />
+			pattern="/api/testplans/**" access="hasRole('edit')" />
 		<security:intercept-url method="POST"
-			pattern="/api/testplans/**" access="hasRole('admin')" />
+			pattern="/api/testplans/**" access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/testplans/**" access="hasRole('admin')" />
+			pattern="/api/testplans/**" access="hasRole('delete')" />
 
 		<security:intercept-url method="GET"
-			pattern="/api/tests/**" access="hasRole('user')" />
+			pattern="/api/tests/**" access="hasRole('view')" />
 		<security:intercept-url method="PUT"
-			pattern="/api/tests/**" access="hasRole('admin')" />
+			pattern="/api/tests/**" access="hasRole('edit')" />
 		<security:intercept-url method="POST"
-			pattern="/api/tests/**" access="hasRole('admin')" />
+			pattern="/api/tests/**" access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
-			pattern="/api/tests/**" access="hasRole('admin')" />
+			pattern="/api/tests/**" access="hasRole('delete')" />
 
 	</security:http>
 

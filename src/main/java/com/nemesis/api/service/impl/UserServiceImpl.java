@@ -1,5 +1,8 @@
 package com.nemesis.api.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,10 +10,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.UserData;
+import com.nemesis.api.data.user.UsersData;
 import com.nemesis.api.model.User;
 import com.nemesis.api.repository.UserRepository;
 import com.nemesis.api.service.UserService;
+import com.nemesis.api.util.GeneralUtils;
 
 @Service("userService")
 @Scope("singleton")
@@ -42,10 +48,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserData addRole(String username, String role) {
-		User user = userRepository.findUserByUsername(username);
-		user.addRole(role);
+	public UserData changePermissions(MapPermissions mapPermissions) {
+		User user = userRepository.findById(mapPermissions.getId());
+		HashMap<String, Boolean> map = mapPermissions.getMapPermissions();
+		user.setPermissions(GeneralUtils.convertMapPermissionsToList(map));
 		userRepository.save(user);
+		return new UserData(user);
+	}
+
+	@Override
+	public UsersData getUsers() {
+		List<User> users = userRepository.getUsers();
+		UsersData usersData = new UsersData(users, users.size(), 1);
+		return usersData;
+	}
+
+	@Override
+	public UserData delete(String userId) {
+		User user = userRepository.findById(userId);
+		userRepository.delete(user);
 		return new UserData(user);
 	}
 }
