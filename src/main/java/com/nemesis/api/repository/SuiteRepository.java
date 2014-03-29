@@ -5,23 +5,13 @@ import java.util.List;
 import com.nemesis.api.filter.SuiteFilter;
 import com.nemesis.api.model.Suite;
 
-public interface SuiteRepository {
+public interface SuiteRepository extends Repository<Suite, String> {
 
 	public List<Suite> findAllSuites(SuiteFilter filter);
 
-	public List<Suite> findAllSuites();
-
-	public Suite findById(String suiteId);
-
 	public List<String> getSuiteNames();
 
-	public Suite create(Suite suite);
-
 	public Suite update(Suite suite);
-
-	public Suite delete(Suite suite);
-
-	public Suite save(Suite suite);
 
 	public long count(SuiteFilter filter);
 

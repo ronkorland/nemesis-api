@@ -63,7 +63,7 @@ public class TestPlanServiceImpl implements TestPlanService {
 
 	@Override
 	public TestPlansData getAllTestPlans() {
-		List<TestPlan> testPlans = testPlanRepository.getAllTestPlans();
+		List<TestPlan> testPlans = testPlanRepository.findAll();
 		List<TestPlanData> testPlanDatas = new ArrayList<TestPlanData>();
 		if (testPlans != null && testPlans.size() > 0) {
 			for (TestPlan testPlan : testPlans) {

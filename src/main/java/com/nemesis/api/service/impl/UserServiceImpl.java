@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserData createUser(UserData userData) {
 		userData.setPassword(passwordEncoder.encode(userData.getPassword()));
-		userRepository.createUser(new User(userData));
+		userRepository.create(new User(userData));
 		return userData;
 	}
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UsersData getUsers() {
-		List<User> users = userRepository.getUsers();
+		List<User> users = userRepository.findAll();
 		UsersData usersData = new UsersData(users, users.size(), 1);
 		return usersData;
 	}

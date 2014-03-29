@@ -14,39 +14,18 @@ import com.nemesis.api.repository.TestPlanRepository;
 
 @Repository
 @Scope("singleton")
-public class TestPlanRepositoryImpl implements TestPlanRepository {
+public class TestPlanRepositoryImpl extends RepositoryImpl<TestPlan, String>
+		implements TestPlanRepository {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
-
-	@Override
-	public TestPlan create(TestPlan testPlan) {
-		mongoTemplate.insert(testPlan);
-		return testPlan;
-	}
 	
-	@Override
-	public TestPlan save(TestPlan testPlan){
-		mongoTemplate.save(testPlan);
-		return testPlan;
+	public TestPlanRepositoryImpl(){
+		super(TestPlan.class);
 	}
 
-	@Override
-	public TestPlan delete(TestPlan testPlan) {
-		mongoTemplate.remove(testPlan);
-		return testPlan;
-	}
-
-	@Override
-	public List<TestPlan> getAllTestPlans() {
-		return mongoTemplate.findAll(TestPlan.class);
-	}
-
-	@Override
-	public TestPlan findById(String testPlanId) {
-		Query query = new Query();
-		query.addCriteria(Criteria.where("_id").is(testPlanId));
-		return mongoTemplate.findOne(query, TestPlan.class);
+	public TestPlanRepositoryImpl(Class<TestPlan> entityClass) {
+		super(TestPlan.class);
 	}
 
 	@Override
@@ -60,6 +39,7 @@ public class TestPlanRepositoryImpl implements TestPlanRepository {
 	public List<TestPlan> findBySuiteId(String suiteId) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("suiteIds").is(suiteId));
-		return mongoTemplate.find(query, TestPlan.class);	}
+		return mongoTemplate.find(query, TestPlan.class);
+	}
 
 }

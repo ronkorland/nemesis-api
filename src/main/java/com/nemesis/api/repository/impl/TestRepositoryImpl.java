@@ -32,25 +32,18 @@ import com.nemesis.api.repository.TestRepository;
 
 @Repository
 @Scope("singleton")
-public class TestRepositoryImpl implements TestRepository {
+public class TestRepositoryImpl extends RepositoryImpl<Test, String> implements
+		TestRepository {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	@Override
-	public Test create(Test test) {
-		try {
-			mongoTemplate.insert(test);
-			return test;
-		} catch (Throwable t) {
-			return null;
-		}
+	public TestRepositoryImpl(){
+		super(Test.class);
 	}
-
-	@Override
-	public Test delete(Test test) {
-		mongoTemplate.remove(test);
-		return test;
+	
+	public TestRepositoryImpl(Class<Test> entityClass) {
+		super(Test.class);
 	}
 
 	@Override
@@ -58,13 +51,6 @@ public class TestRepositoryImpl implements TestRepository {
 		Test findTest = findById(test.getId());
 		Test mergeTest = findTest.merge(test);
 		mongoTemplate.save(mergeTest);
-		return test;
-	}
-
-	@Override
-	public Test findById(String testId) {
-		Test test = mongoTemplate.findOne(
-				new Query(Criteria.where("_id").is(testId)), Test.class);
 		return test;
 	}
 
@@ -245,7 +231,7 @@ public class TestRepositoryImpl implements TestRepository {
 
 		Criteria criteria = where("className").is(filter.getClassName())
 				.and("method").is(filter.getMethod());
-		
+
 		Query query = new Query();
 		query.addCriteria(criteria);
 		query.with(sort("startTime", "desc"));

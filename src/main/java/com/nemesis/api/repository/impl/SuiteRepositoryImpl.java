@@ -24,10 +24,19 @@ import com.nemesis.api.repository.SuiteRepository;
 
 @Repository
 @Scope("singleton")
-public class SuiteRepositoryImpl implements SuiteRepository {
+public class SuiteRepositoryImpl extends RepositoryImpl<Suite, String>
+		implements SuiteRepository {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+
+	public SuiteRepositoryImpl(){
+		super(Suite.class);
+	}
+	
+	public SuiteRepositoryImpl(Class<Suite> entityClass) {
+		super(Suite.class);
+	}
 
 	private Sort sort(String sortedBy, String sortDir) {
 		return new Sort(Direction.fromString(sortDir), sortedBy);
@@ -55,12 +64,6 @@ public class SuiteRepositoryImpl implements SuiteRepository {
 	@Override
 	public long countLast24Hours() {
 		return mongoTemplate.count(lastStartTimeQuery(1), Suite.class);
-	}
-
-	@Override
-	public List<Suite> findAllSuites() {
-		List<Suite> suites = mongoTemplate.findAll(Suite.class);
-		return suites;
 	}
 
 	@Override
@@ -95,16 +98,6 @@ public class SuiteRepositoryImpl implements SuiteRepository {
 	}
 
 	@Override
-	public Suite create(Suite suite) {
-		try {
-			mongoTemplate.insert(suite);
-			return suite;
-		} catch (Throwable t) {
-			return null;
-		}
-	}
-
-	@Override
 	public Suite update(Suite suite) {
 		try {
 			Suite findSuite = findById(suite.getId());
@@ -117,22 +110,6 @@ public class SuiteRepositoryImpl implements SuiteRepository {
 		} catch (Throwable t) {
 			return null;
 		}
-	}
-
-	@Override
-	public Suite save(Suite suite) {
-		try {
-			mongoTemplate.save(suite);
-			return suite;
-		} catch (Throwable t) {
-			return null;
-		}
-	}
-
-	@Override
-	public Suite delete(Suite suite) {
-		mongoTemplate.remove(suite);
-		return suite;
 	}
 
 	@SuppressWarnings("unchecked")

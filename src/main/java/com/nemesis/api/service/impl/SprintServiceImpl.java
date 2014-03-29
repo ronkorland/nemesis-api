@@ -50,7 +50,7 @@ public class SprintServiceImpl implements SprintService {
 
 	@Override
 	public SprintsData getSprints() {
-		List<Sprint> sprints = sprintRepository.findAllSprints();
+		List<Sprint> sprints = sprintRepository.findAll();
 		List<SprintData> dataList = new ArrayList<SprintData>();
 		if (sprints != null && sprints.size() > 0) {
 			for (Sprint sprint : sprints) {
