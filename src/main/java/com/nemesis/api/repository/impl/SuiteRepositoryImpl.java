@@ -24,7 +24,7 @@ import com.nemesis.api.repository.SuiteRepository;
 
 @Repository
 @Scope("singleton")
-public class SuiteRepositoryImpl extends RepositoryImpl<Suite, String>
+public class SuiteRepositoryImpl extends MongoRepositoryImpl<Suite, String>
 		implements SuiteRepository {
 
 	@Autowired

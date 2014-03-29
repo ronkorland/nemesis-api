@@ -14,7 +14,7 @@ import com.nemesis.api.repository.TestPlanRepository;
 
 @Repository
 @Scope("singleton")
-public class TestPlanRepositoryImpl extends RepositoryImpl<TestPlan, String>
+public class TestPlanRepositoryImpl extends MongoRepositoryImpl<TestPlan, String>
 		implements TestPlanRepository {
 
 	@Autowired

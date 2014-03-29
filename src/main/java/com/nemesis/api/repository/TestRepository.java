@@ -6,7 +6,7 @@ import com.nemesis.api.filter.TestFilter;
 import com.nemesis.api.filter.TestHistoryFilter;
 import com.nemesis.api.model.Test;
 
-public interface TestRepository extends Repository<Test, String> {
+public interface TestRepository extends MongoRepository<Test, String> {
 
 	public void addRefToTestAttach(String testId, String attachId);
 

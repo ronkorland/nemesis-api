@@ -12,7 +12,7 @@ import com.nemesis.api.repository.UserRepository;
 
 @Repository
 @Scope("singleton")
-public class UserRepositoryImpl extends RepositoryImpl<User, String> implements
+public class UserRepositoryImpl extends MongoRepositoryImpl<User, String> implements
 		UserRepository {
 
 	@Autowired

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.nemesis.api.model.BaseModel;
 
-public interface Repository<M extends BaseModel, I> {
+public interface MongoRepository<M extends BaseModel, I> {
 
 	public M create(M model);
 

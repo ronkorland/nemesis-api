@@ -8,7 +8,7 @@ import com.nemesis.api.repository.SprintRepository;
 
 @Repository
 @Scope("singleton")
-public class SprintRepositoryImpl extends RepositoryImpl<Sprint, String>
+public class SprintRepositoryImpl extends MongoRepositoryImpl<Sprint, String>
 		implements SprintRepository {
 
 	public SprintRepositoryImpl() {

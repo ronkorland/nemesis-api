@@ -32,7 +32,7 @@ import com.nemesis.api.repository.TestRepository;
 
 @Repository
 @Scope("singleton")
-public class TestRepositoryImpl extends RepositoryImpl<Test, String> implements
+public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implements
 		TestRepository {
 
 	@Autowired

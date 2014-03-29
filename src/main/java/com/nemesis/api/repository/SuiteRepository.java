@@ -5,7 +5,7 @@ import java.util.List;
 import com.nemesis.api.filter.SuiteFilter;
 import com.nemesis.api.model.Suite;
 
-public interface SuiteRepository extends Repository<Suite, String> {
+public interface SuiteRepository extends MongoRepository<Suite, String> {
 
 	public List<Suite> findAllSuites(SuiteFilter filter);
 

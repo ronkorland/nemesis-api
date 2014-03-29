@@ -3,25 +3,30 @@ package com.nemesis.api.repository.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import com.nemesis.api.model.BaseModel;
-import com.nemesis.api.repository.Repository;
+import com.nemesis.api.repository.MongoRepository;
 
-public class RepositoryImpl<M extends BaseModel, I> implements Repository<M, I> {
+@Repository
+@Scope("singleton")
+public class MongoRepositoryImpl<M extends BaseModel, I> implements
+		MongoRepository<M, I> {
 
 	private Class<M> modelClass;
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
-	public RepositoryImpl(){
+	public MongoRepositoryImpl() {
 		super();
 	}
-	
-	public RepositoryImpl(Class<M> modelClass) {
+
+	public MongoRepositoryImpl(Class<M> modelClass) {
 		this.modelClass = modelClass;
 	}
 
