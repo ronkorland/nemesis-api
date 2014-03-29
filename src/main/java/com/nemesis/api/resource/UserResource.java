@@ -16,9 +16,12 @@ public interface UserResource {
 	public Response changePermissions(MapPermissions mapPermissions);
 
 	public Response getUser();
-	
+
 	public Response getUsers();
 
 	public Response delete(String userId);
+
+	public Response chnagePassword(String userId, String currentPassword,
+			String newPassword) throws JSONException;
 
 }

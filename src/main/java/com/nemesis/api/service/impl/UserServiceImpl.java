@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.UserData;
 import com.nemesis.api.data.user.UsersData;
+import com.nemesis.api.exception.PasswordDoesntMatchException;
 import com.nemesis.api.exception.UsernameAlreadyExistsException;
 import com.nemesis.api.model.User;
 import com.nemesis.api.repository.UserRepository;
@@ -76,5 +77,18 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findById(userId);
 		userRepository.delete(user);
 		return new UserData(user);
+	}
+
+	@Override
+	public void changePassword(String userId, String currentPassword,
+			String newPassword) {
+		User user = userRepository.findById(userId);
+		String encodeCurrentPassword = passwordEncoder.encode(currentPassword);
+		if (encodeCurrentPassword.equals(user.getPassword())) {
+			user.setPassword(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
+		} else {
+			throw new PasswordDoesntMatchException("Old password is wrong");
+		}
 	}
 }

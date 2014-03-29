@@ -53,7 +53,7 @@ public class UserData extends BaseData implements UserDetails {
 	}
 
 	public Map<String, Boolean> getMapPermissions() {
-		if (mapPermissions == null) {
+		if (mapPermissions == null && permissions != null) {
 			Map<String, Boolean> permissions = new HashMap<String, Boolean>();
 			for (String permission : getPermissions()) {
 				if (StringUtils.isNotBlank(permission)) {

@@ -15,5 +15,7 @@ public interface UserService extends UserDetailsService {
 	public UsersData getUsers();
 
 	public UserData delete(String userId);
+	
+	public void changePassword(String userId, String currentPassword, String newPassword);
 
 }

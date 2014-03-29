@@ -1,6 +1,7 @@
 package com.nemesis.api.resource.impl;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -27,6 +28,7 @@ import com.nemesis.api.data.user.MapPermissions;
 import com.nemesis.api.data.user.TokenData;
 import com.nemesis.api.data.user.UserData;
 import com.nemesis.api.data.user.UsersData;
+import com.nemesis.api.exception.PasswordDoesntMatchException;
 import com.nemesis.api.exception.UsernameAlreadyExistsException;
 import com.nemesis.api.resource.UserResource;
 import com.nemesis.api.service.UserService;
@@ -78,7 +80,7 @@ public class UserResourceImpl implements UserResource {
 			return Response.ok(retUserData).build();
 		} catch (UsernameAlreadyExistsException e) {
 			JSONObject object = new JSONObject();
-			object.append("status", "error").append("message", e.getMessage());
+			object.append("message", e.getMessage());
 			return Response.status(Status.BAD_REQUEST).entity(object).build();
 		}
 
@@ -122,6 +124,23 @@ public class UserResourceImpl implements UserResource {
 		UserData userData = userService.delete(userId);
 
 		return Response.ok(userData).build();
+	}
+
+	@Override
+	@POST
+	@Path("/changepassword")
+	public Response chnagePassword(@FormParam("userId") String userId,
+			@FormParam("currentPassword") String currentPassword,
+			@FormParam("newPassword") String newPassword) throws JSONException {
+		JSONObject object = new JSONObject();
+		try {
+			userService.changePassword(userId, currentPassword, newPassword);
+			object.append("message", "Password changed");
+			return Response.ok(object).build();
+		} catch (PasswordDoesntMatchException e) {
+			object.append("message", e.getMessage());
+			return Response.status(Status.BAD_REQUEST).entity(object).build();
+		}
 	}
 
 }
