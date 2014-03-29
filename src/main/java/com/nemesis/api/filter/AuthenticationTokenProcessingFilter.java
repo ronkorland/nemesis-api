@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -35,9 +36,13 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		String userName = TokenUtils.getUserNameFromToken(authToken);
 
 		if (userName != null) {
-
-			UserDetails userDetails = this.userService
-					.loadUserByUsername(userName);
+			UserDetails userDetails = null;
+			try {
+				userDetails = this.userService.loadUserByUsername(userName);
+			} catch (UsernameNotFoundException e) {
+				chain.doFilter(request, response);
+				return;
+			}
 
 			if (TokenUtils.validateToken(authToken, userDetails)) {
 
