@@ -82,8 +82,17 @@
 	<bean id="userService" class="com.nemesis.api.service.impl.UserServiceImpl">
 	</bean>
 
+	<bean id="userRepository" class="com.nemesis.api.repository.impl.UserRepositoryImpl">
+	</bean>
+
 	<bean id="passwordEncoder" class="com.nemesis.api.encoder.SaltedSHA256PasswordEncoder">
 		<constructor-arg value="secret" />
+	</bean>
+
+	<bean id="defaultUsersInitializer" class="com.nemesis.api.initializer.DefaultUsersInitializer"
+		init-method="initDefaultUsers">
+		<constructor-arg ref="passwordEncoder" />
+		<constructor-arg ref="userRepository" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">
@@ -98,7 +107,7 @@
 		authentication-manager-ref="authenticationManager">
 		<security:custom-filter ref="authenticationTokenProcessingFilter"
 			position="FORM_LOGIN_FILTER" />
-			
+
 		<security:intercept-url pattern="/api/users/login"
 			access="permitAll" />
 
@@ -147,12 +156,12 @@
 		<security:intercept-url method="DELETE"
 			pattern="/api/testplans/**" access="hasRole('delete')" />
 
-		<security:intercept-url method="GET"
-			pattern="/api/tests/**" access="hasRole('view')" />
-		<security:intercept-url method="PUT"
-			pattern="/api/tests/**" access="hasRole('edit')" />
-		<security:intercept-url method="POST"
-			pattern="/api/tests/**" access="hasRole('create')" />
+		<security:intercept-url method="GET" pattern="/api/tests/**"
+			access="hasRole('view')" />
+		<security:intercept-url method="PUT" pattern="/api/tests/**"
+			access="hasRole('edit')" />
+		<security:intercept-url method="POST" pattern="/api/tests/**"
+			access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
 			pattern="/api/tests/**" access="hasRole('delete')" />
 
