@@ -44,8 +44,8 @@ public class SprintResourceImpl implements SprintResource {
 	@Override
 	@PUT
 	public Response update(SprintData sprintData) {
-		// TODO Auto-generated method stub
-		return null;
+		SprintData update = sprintService.update(sprintData);
+		return Response.ok(update).build();
 	}
 
 	@Override

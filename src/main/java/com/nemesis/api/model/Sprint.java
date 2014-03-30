@@ -1,5 +1,7 @@
 package com.nemesis.api.model;
 
+import java.util.NoSuchElementException;
+
 import org.joda.time.LocalDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -52,4 +54,23 @@ public class Sprint extends BaseModel {
 		this.endDate = endDate;
 	}
 
+	public Sprint merge(Sprint other) {
+		if (!this.getId().equals(other.getId())) {
+			throw new NoSuchElementException("User object doesn't match");
+		}
+		if (this.getName() == null || !this.getName().equals(other.getName())) {
+			this.setName(other.getName());
+		}
+
+		if (this.getStartDate() == null
+				|| !this.getStartDate().isEqual(other.getStartDate())) {
+			this.setStartDate(other.getStartDate());
+		}
+
+		if (this.getEndDate() == null
+				|| !this.getEndDate().isEqual(other.getEndDate())) {
+			this.setEndDate(other.getEndDate());
+		}
+		return this;
+	}
 }

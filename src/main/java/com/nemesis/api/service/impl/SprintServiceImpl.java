@@ -44,8 +44,10 @@ public class SprintServiceImpl implements SprintService {
 
 	@Override
 	public SprintData update(SprintData sprintData) {
-		// TODO Auto-generated method stub
-		return null;
+		Sprint currentSprint = sprintRepository.findById(sprintData.getId());
+		currentSprint = currentSprint.merge(new Sprint(sprintData));
+		sprintRepository.save(currentSprint);
+		return new SprintData(currentSprint);
 	}
 
 	@Override
