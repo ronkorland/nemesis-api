@@ -2,6 +2,7 @@ package com.nemesis.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -67,6 +68,23 @@ public class User extends BaseModel {
 
 	public void setPermissions(List<String> permissions) {
 		this.permissions = permissions;
+	}
+	
+	public User merge(User other) {
+		if (!this.getId().equals(other.getId())) {
+			throw new NoSuchElementException("User object doesn't match");
+		}
+		if (this.getUsername() == null
+				|| !this.getUsername().equals(other.getUsername())) {
+			this.setUsername(other.getUsername());
+		}
+		
+		if (this.getEmail() == null
+				|| !this.getEmail().equals(other.getEmail())) {
+			this.setEmail(other.getEmail());
+		}
+		
+		return this;
 	}
 
 }

@@ -91,4 +91,12 @@ public class UserServiceImpl implements UserService {
 			throw new PasswordDoesntMatchException("Old password is wrong");
 		}
 	}
+
+	@Override
+	public UserData update(UserData data) {
+		User currentUser = userRepository.findById(data.getId());
+		currentUser = currentUser.merge(new User(data));
+		userRepository.save(currentUser);
+		return new UserData(currentUser);
+	}
 }

@@ -23,5 +23,7 @@ public interface UserResource {
 
 	public Response chnagePassword(String userId, String currentPassword,
 			String newPassword) throws JSONException;
+	
+	public Response update(UserData data);
 
 }
