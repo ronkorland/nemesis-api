@@ -77,6 +77,12 @@
 		</property>
 	</bean>
 
+	<bean id="testAttachmentResourceImpl"
+		class="com.nemesis.api.resource.impl.TestAttachmentResourceImpl">
+		<constructor-arg type="java.lang.String" value="/data1/tomcat7/static/" />
+		<constructor-arg type="java.lang.String" value="http://localhost/files/" />
+	</bean>
+
 	<!-- SPRING SECURITY SETUP -->
 
 	<bean id="userService" class="com.nemesis.api.service.impl.UserServiceImpl">
@@ -115,7 +121,7 @@
 			access="hasRole('view')" />
 		<security:intercept-url method="PUT" pattern="/api/suites/**"
 			access="hasRole('edit')" />
-		<security:intercept-url method="POST" pattern="/api/suits/**"
+		<security:intercept-url method="POST" pattern="/api/suites/**"
 			access="hasRole('create')" />
 		<security:intercept-url method="DELETE"
 			pattern="/api/suites/**" access="hasRole('delete')" />

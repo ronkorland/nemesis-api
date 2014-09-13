@@ -41,14 +41,19 @@ public class TestAttachmentResourceImpl implements TestAttachmentResource {
 
 	private String fileUrlPrefix = "http://localhost/files/";
 
+	public TestAttachmentResourceImpl(String fileLocalFolder, String fileUrlPrefix) {
+		this.fileLocalFolder = fileLocalFolder;
+		this.fileUrlPrefix = fileUrlPrefix;
+	}
+
 	@POST
 	@Path("/{testId}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response addAttach(@PathParam("testId") String testId,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-		TestAttachmentData testAttachment = new TestAttachmentData(testId,
-				uploadedInputStream, fileDetail.getFileName());
+		TestAttachmentData testAttachment = new TestAttachmentData(testId, uploadedInputStream,
+				fileDetail.getFileName());
 		testAttachmentService.addAttachment(testAttachment);
 		return Response.ok("{\"status\":\"OK\"}").build();
 	}
@@ -62,16 +67,14 @@ public class TestAttachmentResourceImpl implements TestAttachmentResource {
 
 	@GET
 	@Path("/{attachId}")
-	public Response saveToFileById(@PathParam("attachId") String attachId,
-			@Context final HttpServletRequest request,
+	public Response saveToFileById(@PathParam("attachId") String attachId, @Context final HttpServletRequest request,
 			@Context final HttpServletResponse response) throws Exception {
 
 		// String url = "http://" + uriInfo.getBaseUri().getHost();
 		// + ":" + port;
 		// String tempFolder = "C:\\tomcat_files\\";
 
-		String fileName = testAttachmentService.saveToFileById(attachId,
-				fileLocalFolder);
+		String fileName = testAttachmentService.saveToFileById(attachId, fileLocalFolder);
 
 		if (fileName == null) {
 			Response.status(Status.CONFLICT).build();
