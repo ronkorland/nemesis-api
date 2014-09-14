@@ -104,17 +104,17 @@ public class LineChart {
 			dataAmountOfTests
 					.add(new LineData(
 							entry.getValue().getAmountOfTests(),
-							"/#/tests?minusDays=-1&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
+							"#/tests?minusDays=-1&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
 									+ date));
 			dataAmountOfFailed
 					.add(new LineData(
 							entry.getValue().getAmountOfFailed(),
-							"/#/tests?minusDays=-1&status=FAILURE&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
+							"#/tests?minusDays=-1&status=FAILURE&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
 									+ date));
 			dataAmountOfSuccess
 					.add(new LineData(
 							entry.getValue().getAmountOfSuccess(),
-							"/#/tests?minusDays=-1&status=SUCCESS&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
+							"#/tests?minusDays=-1&status=SUCCESS&pageSize=15&pageNumber=0&sortDir=desc&sortedBy=startTime&startDate="
 									+ date));
 		}
 		xAxis.setCategories(categories);
