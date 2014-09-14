@@ -31,6 +31,8 @@ public class Test extends BaseModel {
 	private String method;
 
 	private List<String> testAttachments;
+	
+	private List<String> logs;
 
 	private FailureReason failureReason;
 
@@ -52,6 +54,7 @@ public class Test extends BaseModel {
 		setMethod(data.getMethod());
 		setTestGroups(data.getTestGroups());
 		setParameters(convertTestParameters(data.getParameters()));
+		setLogs(data.getLogs());
 		if (data.getFailureReason() != null) {
 			FailureReason failureReasonData = new FailureReason(
 					data.getFailureReason());
@@ -196,5 +199,13 @@ public class Test extends BaseModel {
 
 	public void setSuiteId(String suiteId) {
 		this.suiteId = suiteId;
+	}
+
+	public List<String> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(List<String> logs) {
+		this.logs = logs;
 	}
 }

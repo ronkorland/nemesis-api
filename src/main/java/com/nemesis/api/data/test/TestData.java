@@ -36,12 +36,14 @@ public class TestData extends BaseData {
 	private LocalDateTime endTime;
 
 	private String runningTime;
-	
+
 	private long durationSec;
 
 	private List<TestParameterData> parameters;
 
 	private List<String> testAttachments;
+
+	private List<String> logs;
 
 	private FailureReasonData failureReason;
 
@@ -67,16 +69,15 @@ public class TestData extends BaseData {
 		setClassName(test.getClassName());
 		setMethod(test.getMethod());
 		setTestGroups(test.getTestGroups());
+		setLogs(test.getLogs());
 		if (test.getFailureReason() != null) {
-			FailureReasonData failureReasonModel = new FailureReasonData(
-					test.getFailureReason());
+			FailureReasonData failureReasonModel = new FailureReasonData(test.getFailureReason());
 			setFailureReason(failureReasonModel);
 		}
 		clacRunningTime();
 	}
 
-	private List<TestParameterData> convertTestParameters(
-			List<TestParameter> parameters) {
+	private List<TestParameterData> convertTestParameters(List<TestParameter> parameters) {
 		List<TestParameterData> datas = new ArrayList<TestParameterData>();
 
 		if (parameters != null && parameters.size() > 0) {
@@ -90,12 +91,10 @@ public class TestData extends BaseData {
 
 	private void clacRunningTime() {
 		if (getEndTime() != null && getStartTime() != null) {
-			Duration dur = new Duration(getStartTime().toDateTime(),
-					getEndTime().toDateTime());
+			Duration dur = new Duration(getStartTime().toDateTime(), getEndTime().toDateTime());
 			setDurationSec(dur.getStandardSeconds());
 			Period p = dur.toPeriod();
-			setRunningTime(p.getHours() + ":" + p.getMinutes() + ":"
-					+ p.getSeconds());
+			setRunningTime(p.getHours() + ":" + p.getMinutes() + ":" + p.getSeconds());
 		}
 	}
 
@@ -203,6 +202,14 @@ public class TestData extends BaseData {
 
 	public void setDurationSec(long durationSec) {
 		this.durationSec = durationSec;
+	}
+
+	public List<String> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(List<String> logs) {
+		this.logs = logs;
 	}
 
 }
