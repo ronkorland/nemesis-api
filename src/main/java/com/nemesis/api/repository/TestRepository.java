@@ -25,4 +25,6 @@ public interface TestRepository extends MongoRepository<Test, String> {
 	public List<Test> findLast24Hours();
 
 	public List<Test> getTestHistory(TestHistoryFilter filter);
+	
+	public List<Test> findTestsBySuiteId(String suiteId);
 }

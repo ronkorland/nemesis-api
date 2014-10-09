@@ -12,6 +12,8 @@ public interface MongoRepository<M extends BaseModel, I> {
 
 	public M save(M model);
 
+	public void delete(Query query);
+
 	public M delete(M model);
 
 	public M findOne(Query query);

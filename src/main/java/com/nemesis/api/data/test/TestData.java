@@ -53,6 +53,8 @@ public class TestData extends BaseData {
 
 	private List<String> testGroups;
 
+	private String env;
+
 	public TestData() {
 		super();
 	}
@@ -75,6 +77,22 @@ public class TestData extends BaseData {
 			setFailureReason(failureReasonModel);
 		}
 		clacRunningTime();
+		setEnv(getEnvParam(test));
+	}
+
+	private String getEnvParam(Test test) {
+		String env = "";
+		List<TestParameter> parameters = test.getParameters();
+		if (parameters != null && parameters.size() > 0) {
+			for (TestParameter p : parameters) {
+				if (p.getParamName().equalsIgnoreCase("env")) {
+					env = p.getParamValue();
+					break;
+				}
+			}
+		}
+
+		return env;
 	}
 
 	private List<TestParameterData> convertTestParameters(List<TestParameter> parameters) {
@@ -210,6 +228,14 @@ public class TestData extends BaseData {
 
 	public void setLogs(List<String> logs) {
 		this.logs = logs;
+	}
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
 	}
 
 }

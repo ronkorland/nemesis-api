@@ -49,6 +49,11 @@ public class MongoRepositoryImpl<M extends BaseModel, I> implements
 	}
 
 	@Override
+	public void delete(Query query) {
+		mongoTemplate.remove(query, this.modelClass);
+	}
+	
+	@Override
 	public M delete(M model) {
 		mongoTemplate.remove(model);
 		return model;

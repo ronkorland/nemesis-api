@@ -1,5 +1,7 @@
 package com.nemesis.api.repository.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,8 +14,7 @@ import com.nemesis.api.repository.UserRepository;
 
 @Repository
 @Scope("singleton")
-public class UserRepositoryImpl extends MongoRepositoryImpl<User, String> implements
-		UserRepository {
+public class UserRepositoryImpl extends MongoRepositoryImpl<User, String> implements UserRepository {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -32,5 +33,13 @@ public class UserRepositoryImpl extends MongoRepositoryImpl<User, String> implem
 
 		User user = mongoTemplate.findOne(query, User.class);
 		return user;
+	}
+
+	@Override
+	public List<User> findUserDailyReport() {
+		Query query = new Query(Criteria.where("daliyReport").is(true));
+
+		List<User> users = mongoTemplate.find(query, User.class);
+		return users;
 	}
 }

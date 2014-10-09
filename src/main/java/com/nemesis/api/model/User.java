@@ -19,6 +19,8 @@ public class User extends BaseModel {
 
 	private List<String> permissions;
 
+	private boolean daliyReport;
+
 	public User() {
 		super();
 	}
@@ -29,6 +31,7 @@ public class User extends BaseModel {
 		setPassword(data.getPassword());
 		setPermissions(data.getPermissions());
 		setEmail(data.getEmail());
+		setDaliyReport(data.isDaliyReport());
 	}
 
 	public String getUsername() {
@@ -69,22 +72,34 @@ public class User extends BaseModel {
 	public void setPermissions(List<String> permissions) {
 		this.permissions = permissions;
 	}
-	
+
+	public boolean isDaliyReport() {
+		return daliyReport;
+	}
+
+	public void setDaliyReport(boolean daliyReport) {
+		this.daliyReport = daliyReport;
+	}
+
 	public User merge(User other) {
 		if (!this.getId().equals(other.getId())) {
 			throw new NoSuchElementException("User object doesn't match");
 		}
-		if (this.getUsername() == null
-				|| !this.getUsername().equals(other.getUsername())) {
+		if (this.getUsername() == null || !this.getUsername().equals(other.getUsername())) {
 			this.setUsername(other.getUsername());
 		}
-		
-		if (this.getEmail() == null
-				|| !this.getEmail().equals(other.getEmail())) {
+
+		if (this.getEmail() == null || !this.getEmail().equals(other.getEmail())) {
 			this.setEmail(other.getEmail());
 		}
-		
+
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", email=" + email + ", permissions=" + permissions + ", daliyReport="
+				+ daliyReport + "]";
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.nemesis.api.scheduler;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -9,15 +10,13 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import com.hp.gagawa.java.Document;
@@ -30,26 +29,40 @@ import com.hp.gagawa.java.elements.Th;
 import com.hp.gagawa.java.elements.Tr;
 import com.nemesis.api.data.suite.SuiteData;
 import com.nemesis.api.data.suite.SuitesData;
+import com.nemesis.api.model.User;
 import com.nemesis.api.service.SuiteService;
+import com.nemesis.api.service.UserService;
 
 @Component
 @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
-public class SummaryTestsReportJob extends QuartzJobBean {
+public class SummaryTestsReportJob {
+
+	private static final Logger logger = Logger.getLogger(SummaryTestsReportJob.class);
 
 	@Autowired
 	private SuiteService suiteService;
 
-	@Override
-	protected void executeInternal(JobExecutionContext context)
-			throws JobExecutionException {
+	@Autowired
+	private UserService userService;
+
+	private String nemesisUrl;
+
+	private String from;
+
+	public SummaryTestsReportJob(String nemesisUrl, String from) {
+		this.nemesisUrl = nemesisUrl;
+		this.from = from;
+	}
+
+	public void sendSummaryEmail() {
 		String html = generateHtml();
-		System.out.println(html);
+		logger.debug("executeInternal html " + html);
 		sendEmail(html);
 	}
 
 	public String generateHtml() {
-		DateTimeFormatter formatter = DateTimeFormat
-				.forPattern("yyyy-MM-dd HH:mm:ss");
+		logger.debug("Start generateHtml");
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
 		int totalTests = 0;
 		int totalFailedTests = 0;
@@ -75,37 +88,34 @@ public class SummaryTestsReportJob extends QuartzJobBean {
 			for (SuiteData suite : last24HoursSuites.getSuites()) {
 				totalTests = totalTests + suite.getNumberOfTests();
 				totalFailedTests = totalFailedTests + suite.getNumberOfFails();
-				totalSkippedTests = totalSkippedTests
-						+ suite.getNumberOfSkips();
+				totalSkippedTests = totalSkippedTests + suite.getNumberOfSkips();
 
-				String link = "http://localhost/#/suite/" + suite.getId();
-				Tr suiteRow = getSuiteRow(suite.getSuiteName(), suite
-						.getStartTime().toString(formatter), suite.getEndTime()
-						.toString(formatter), suite.getRunningTime(),
-						suite.getNumberOfTests(), suite.getHtmlStatus(), link);
+				String link = nemesisUrl + "#/suite/" + suite.getId();
+				Tr suiteRow = getSuiteRow(suite.getSuiteName(), suite.getStartTime().toString(formatter), suite
+						.getEndTime().toString(formatter), suite.getRunningTime(), suite.getNumberOfTests(),
+						suite.getHtmlStatus(), link);
 
 				table.appendChild(suiteRow);
 			}
 
-			Tr summaryRow = getSummaryRow(totalTests, totalFailedTests,
-					totalSkippedTests);
+			Tr summaryRow = getSummaryRow(totalTests, totalFailedTests, totalSkippedTests);
 			table.appendChild(summaryRow);
 		}
 
 		document.body.appendChild(table);
 		document.head.appendChild(style);
 
+		logger.debug("End generateHtml");
 		return document.write();
 	}
 
-	private Tr getSummaryRow(int totalTests, int totalFailedTests,
-			int totalSkippedTests) {
+	private Tr getSummaryRow(int totalTests, int totalFailedTests, int totalSkippedTests) {
 		Tr trSummaryRow = new Tr();
 
 		Td tdSummary = new Td();
 		tdSummary.setAttribute("colspan", "7");
-		tdSummary.appendText("Total Tests: " + totalTests + " Failed: "
-				+ totalFailedTests + " Skipped: " + totalSkippedTests);
+		tdSummary.appendText("Total Tests: " + totalTests + " Failed: " + totalFailedTests + " Skipped: "
+				+ totalSkippedTests);
 
 		trSummaryRow.appendChild(tdSummary);
 		return trSummaryRow;
@@ -145,8 +155,8 @@ public class SummaryTestsReportJob extends QuartzJobBean {
 		return trHeader;
 	}
 
-	private Tr getSuiteRow(String suiteName, String startTime, String endTime,
-			String elapsed, int numberOfTests, String status, String link) {
+	private Tr getSuiteRow(String suiteName, String startTime, String endTime, String elapsed, int numberOfTests,
+			String status, String link) {
 		Tr trSuiteRow = new Tr();
 
 		Td tdSuiteName = new Td();
@@ -182,22 +192,21 @@ public class SummaryTestsReportJob extends QuartzJobBean {
 	}
 
 	private void sendEmail(String html) {
-		// Recipient's email ID needs to be mentioned.
-		String to = "ron@gmail.com";
+		List<User> users = userService.findUserDailyReport();
+
+		if (users == null || users.size() < 1) {
+			logger.error("Failed to get any user");
+			return;
+		}
 
 		// Sender's email ID needs to be mentioned
-		String from = "ron@gmail.com";
-
-		// Assuming you are sending email from localhost
-		String host = "smtp.gmail.com";
-		String port = "34334";
+		String fromEmail = this.from;
 
 		// Get system properties
 		Properties properties = System.getProperties();
 
 		// Setup mail server
-		properties.setProperty("mail.smtp.host", host);
-		properties.put("mail.smtp.port", port);
+		properties.setProperty("mail.smtp.host", "localhost");
 
 		// Get the default Session object.
 		Session session = Session.getDefaultInstance(properties);
@@ -207,22 +216,22 @@ public class SummaryTestsReportJob extends QuartzJobBean {
 			MimeMessage message = new MimeMessage(session);
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(fromEmail));
 
 			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					to));
+			for (User user : users) {
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+			}
 
 			// Set Subject: header field
-			message.setSubject("Daily Automation Summary Report - "
-					+ getCurrentTimeInFormat("yyyy-MM-dd"));
+			message.setSubject("Daily Automation Summary Report - " + getCurrentTimeInFormat("yyyy-MM-dd"));
 
 			// Send the actual HTML message, as big as you like
 			message.setContent(html, "text/html");
 
 			// Send message
 			Transport.send(message);
-			System.out.println("Sent message successfully....");
+			logger.info("Sent message successfully to: " + users);
 		} catch (MessagingException mex) {
 			mex.printStackTrace();
 		}

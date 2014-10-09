@@ -35,6 +35,8 @@ public class SuiteData extends BaseData {
 	private int numberOfSkips = 0;
 
 	private String htmlStatus = "";
+	
+	private String env;
 
 	public SuiteData() {
 		super();
@@ -147,6 +149,14 @@ public class SuiteData extends BaseData {
 
 	public void setSuiteStatus(Status suiteStatus) {
 		this.suiteStatus = suiteStatus;
+	}
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
 	}
 
 }

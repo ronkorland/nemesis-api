@@ -15,6 +15,15 @@
 
 	<context:annotation-config />
 
+	<bean id="propertiesConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+			</list>
+		</property>
+	</bean>
+
 	<!-- MongoTemplate for connecting and quering the documents in the database -->
 	<mongo:db-factory host="localhost" port="27017"
 		dbname="automation" />
@@ -31,14 +40,35 @@
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
 	</bean>
 
-	<bean id="summaryTestsReportJobDetail"
+	<!-- restTemplate -->
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+
+	<bean id="summaryTestsReportJob" class="com.nemesis.api.scheduler.SummaryTestsReportJob">
+		<constructor-arg type="java.lang.String" value="${nemesis.url}" />
+		<constructor-arg type="java.lang.String" value="${email.summary.from}" />
+	</bean>
+
+	<bean id="syncNodeDataJobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="jobClass"
-			value="com.nemesis.api.scheduler.SummaryTestsReportJob" />
+		<property name="jobClass" value="com.nemesis.api.scheduler.SyncNodeDataJob" />
 		<property name="durability" value="true" />
 	</bean>
 
-	<bean id="firstTrigger"
+	<bean id="syncNodeJobTrigger"
+		class="com.nemesis.api.scheduler.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail" ref="syncNodeDataJobDetail" />
+		<!-- 0 0 5 * * ? run every morning at 5:00 AM -->
+		<!-- 0/5 * * * * ? run every 5 seconds -->
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>
+
+	<bean id="summaryTestsReportJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="summaryTestsReportJob" />
+		<property name="targetMethod" value="sendSummaryEmail" />
+	</bean>
+
+	<bean id="summaryTestsReportJobTrigger"
 		class="com.nemesis.api.scheduler.PersistableCronTriggerFactoryBean">
 		<property name="jobDetail" ref="summaryTestsReportJobDetail" />
 		<!-- 0 0 5 * * ? run every morning at 5:00 AM -->
@@ -68,19 +98,21 @@
 		<property name="jobDetails">
 			<list>
 				<ref bean="summaryTestsReportJobDetail" />
+				<ref bean="syncNodeDataJobDetail" />
 			</list>
 		</property>
 		<property name="triggers">
 			<list>
-				<ref bean="firstTrigger" />
+				<ref bean="summaryTestsReportJobTrigger" />
+				<ref bean="syncNodeJobTrigger" />
 			</list>
 		</property>
 	</bean>
 
 	<bean id="testAttachmentResourceImpl"
 		class="com.nemesis.api.resource.impl.TestAttachmentResourceImpl">
-		<constructor-arg type="java.lang.String" value="/data1/tomcat7/static/" />
-		<constructor-arg type="java.lang.String" value="http://localhost/files/" />
+		<constructor-arg type="java.lang.String" value="${file.local.folder}" />
+		<constructor-arg type="java.lang.String" value="${file.url.prefix}" />
 	</bean>
 
 	<!-- SPRING SECURITY SETUP -->
@@ -144,8 +176,17 @@
 		<security:intercept-url method="DELETE"
 			pattern="/api/sprints/**" access="hasRole('delete')" />
 
-		<security:intercept-url method="GET" pattern="/api/attach/**"
+		<security:intercept-url method="GET" pattern="/api/grid/**"
 			access="hasRole('view')" />
+		<security:intercept-url method="PUT" pattern="/api/grid/**"
+			access="hasRole('edit')" />
+		<security:intercept-url method="POST" pattern="/api/grid/**"
+			access="hasRole('create')" />
+		<security:intercept-url method="DELETE"
+			pattern="/api/grid/**" access="hasRole('delete')" />
+
+		<security:intercept-url method="GET" pattern="/api/attach/**"
+			access="permitAll" />
 		<security:intercept-url method="PUT" pattern="/api/attach/**"
 			access="hasRole('edit')" />
 		<security:intercept-url method="POST" pattern="/api/attach/**"

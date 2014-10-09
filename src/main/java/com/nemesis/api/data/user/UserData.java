@@ -31,6 +31,8 @@ public class UserData extends BaseData implements UserDetails {
 
 	private HashMap<String, Boolean> mapPermissions;
 
+	private boolean daliyReport;
+
 	public UserData() {
 		super();
 	}
@@ -41,6 +43,7 @@ public class UserData extends BaseData implements UserDetails {
 		setPassword(model.getPassword());
 		setPermissions(model.getPermissions());
 		setEmail(model.getEmail());
+		setDaliyReport(model.isDaliyReport());
 	}
 
 	@Override
@@ -128,14 +131,21 @@ public class UserData extends BaseData implements UserDetails {
 
 	public List<String> getPermissions() {
 		if (permissions == null && mapPermissions != null) {
-			permissions = GeneralUtils
-					.convertMapPermissionsToList(mapPermissions);
+			permissions = GeneralUtils.convertMapPermissionsToList(mapPermissions);
 		}
 		return permissions;
 	}
 
 	public void setPermissions(List<String> permissions) {
 		this.permissions = permissions;
+	}
+
+	public boolean isDaliyReport() {
+		return daliyReport;
+	}
+
+	public void setDaliyReport(boolean daliyReport) {
+		this.daliyReport = daliyReport;
 	}
 
 }

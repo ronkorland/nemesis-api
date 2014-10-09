@@ -31,12 +31,10 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
-	public UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findUserByUsername(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("Failed to find username "
-					+ username);
+			throw new UsernameNotFoundException("Failed to find username " + username);
 		}
 
 		return new UserData(user);
@@ -49,8 +47,7 @@ public class UserServiceImpl implements UserService {
 			userData.setPassword(passwordEncoder.encode(userData.getPassword()));
 			userRepository.create(new User(userData));
 		} else {
-			throw new UsernameAlreadyExistsException("Username "
-					+ userData.getUsername() + " already exists");
+			throw new UsernameAlreadyExistsException("Username " + userData.getUsername() + " already exists");
 		}
 
 		return userData;
@@ -80,8 +77,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void changePassword(String userId, String currentPassword,
-			String newPassword) {
+	public void changePassword(String userId, String currentPassword, String newPassword) {
 		User user = userRepository.findById(userId);
 		String encodeCurrentPassword = passwordEncoder.encode(currentPassword);
 		if (encodeCurrentPassword.equals(user.getPassword())) {
@@ -98,5 +94,11 @@ public class UserServiceImpl implements UserService {
 		currentUser = currentUser.merge(new User(data));
 		userRepository.save(currentUser);
 		return new UserData(currentUser);
+	}
+
+	@Override
+	public List<User> findUserDailyReport() {
+		List<User> users = userRepository.findUserDailyReport();
+		return users;
 	}
 }

@@ -32,16 +32,15 @@ import com.nemesis.api.repository.TestRepository;
 
 @Repository
 @Scope("singleton")
-public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implements
-		TestRepository {
+public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implements TestRepository {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	public TestRepositoryImpl(){
+	public TestRepositoryImpl() {
 		super(Test.class);
 	}
-	
+
 	public TestRepositoryImpl(Class<Test> entityClass) {
 		super(Test.class);
 	}
@@ -67,8 +66,7 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 			}
 			update(test);
 		} else {
-			throw new NoSuchElementException("Failed to find test with id "
-					+ testId);
+			throw new NoSuchElementException("Failed to find test with id " + testId);
 		}
 	}
 
@@ -89,9 +87,7 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 	}
 
 	private Test findByAttachId(String attachId) {
-		Test test = mongoTemplate.findOne(
-				Query.query(Criteria.where("testAttachments").is(attachId)),
-				Test.class);
+		Test test = mongoTemplate.findOne(Query.query(Criteria.where("testAttachments").is(attachId)), Test.class);
 		return test;
 	}
 
@@ -124,8 +120,7 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 			DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 			LocalDate startDate = dtf.parseLocalDate(filter.getStartDate());
 
-			criteria = where("startTime").gte(
-					startDate.toDateTime(LocalTime.MIDNIGHT)).lt(
+			criteria = where("startTime").gte(startDate.toDateTime(LocalTime.MIDNIGHT)).lt(
 					startDate.toDateTime(new LocalTime(23, 59, 59)));
 
 			if (StringUtils.isNotBlank(filter.getStatus())) {
@@ -151,13 +146,11 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 			criteria = Criteria.where("suiteId").is(filter.getSuiteId());
 		}
 
-		if (StringUtils.isNotBlank(filter.getSortDir())
-				&& StringUtils.isNotBlank(filter.getSortedBy())) {
+		if (StringUtils.isNotBlank(filter.getSortDir()) && StringUtils.isNotBlank(filter.getSortedBy())) {
 			sort = sort(filter.getSortedBy(), filter.getSortDir());
 		}
 		if (filter.getPageSize() > 0 && filter.getPageSize() > 0) {
-			pageRequest = new PageRequest(filter.getPageNumber(),
-					filter.getPageSize());
+			pageRequest = new PageRequest(filter.getPageNumber(), filter.getPageSize());
 		}
 
 		Query query = new Query();
@@ -175,9 +168,8 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 	@SuppressWarnings("unchecked")
 	public List<String> getMethodsBySuiteId(String suiteId) {
 		DBCollection collection = mongoTemplate.getCollection("tests");
-		List<String> list = collection.distinct("method",
-				Query.query(Criteria.where("suiteId").is(suiteId))
-						.getQueryObject());
+		List<String> list = collection.distinct("method", Query.query(Criteria.where("suiteId").is(suiteId))
+				.getQueryObject());
 		return list;
 	}
 
@@ -202,8 +194,7 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 
 	@Override
 	public List<Test> findLast24Hours() {
-		List<Test> tests = mongoTemplate
-				.find(lastStartTimeQuery(1), Test.class);
+		List<Test> tests = mongoTemplate.find(lastStartTimeQuery(1), Test.class);
 		return tests;
 	}
 
@@ -229,13 +220,18 @@ public class TestRepositoryImpl extends MongoRepositoryImpl<Test, String> implem
 			return null;
 		}
 
-		Criteria criteria = where("className").is(filter.getClassName())
-				.and("method").is(filter.getMethod());
+		Criteria criteria = where("className").is(filter.getClassName()).and("method").is(filter.getMethod());
 
 		Query query = new Query();
 		query.addCriteria(criteria);
 		query.with(sort("startTime", "desc"));
 		query.limit(20);
 		return mongoTemplate.find(query, Test.class);
+	}
+
+	@Override
+	public List<Test> findTestsBySuiteId(String suiteId) {
+		List<Test> tests = mongoTemplate.find(Query.query(Criteria.where("suiteId").is(suiteId)), Test.class);
+		return tests;
 	}
 }

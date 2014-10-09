@@ -5,10 +5,12 @@ public class LastActivity {
 	private int amountOfTests;
 	private int amountOfFailed;
 	private int amountOfSuccess;
+	private int amountOfSkipped;
 
 	public LastActivity() {
 		amountOfFailed = 0;
 		amountOfSuccess = 0;
+		amountOfSkipped = 0;
 		amountOfTests = 0;
 	}
 
@@ -40,11 +42,23 @@ public class LastActivity {
 		this.amountOfFailed = this.amountOfFailed + addAmount;
 	}
 
+	public void addToAmountOfSkipped(int addAmount) {
+		this.amountOfSkipped = this.amountOfSkipped + addAmount;
+	}
+
 	public void addToAmountOfTests(int addAmount) {
 		this.amountOfTests = this.amountOfTests + addAmount;
 	}
 
 	public void addToAmountOfSuccess(int addAmount) {
 		this.amountOfSuccess = this.amountOfSuccess + addAmount;
+	}
+
+	public int getAmountOfSkipped() {
+		return amountOfSkipped;
+	}
+
+	public void setAmountOfSkipped(int amountOfSkipped) {
+		this.amountOfSkipped = amountOfSkipped;
 	}
 }

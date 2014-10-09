@@ -23,7 +23,10 @@ import com.nemesis.api.data.suite.SuitesData;
 import com.nemesis.api.data.summary.SummaryData;
 import com.nemesis.api.filter.SuiteFilter;
 import com.nemesis.api.model.Suite;
+import com.nemesis.api.model.Test;
+import com.nemesis.api.model.TestParameter;
 import com.nemesis.api.repository.SuiteRepository;
+import com.nemesis.api.repository.TestRepository;
 import com.nemesis.api.service.SuiteService;
 
 @Service("suiteService")
@@ -32,6 +35,9 @@ public class SuiteServiceImpl implements SuiteService {
 
 	@Autowired
 	private SuiteRepository suiteRepository;
+
+	@Autowired
+	private TestRepository testRepository;
 
 	@Override
 	public SuitesData findAllSuites(SuiteFilter filter) {
@@ -42,8 +48,7 @@ public class SuiteServiceImpl implements SuiteService {
 		suitesData.setTotal(count);
 		long totalPages = 1;
 		if (filter.getPageSize() != 0) {
-			totalPages = (long) Math.ceil((double) count
-					/ (double) filter.getPageSize());
+			totalPages = (long) Math.ceil((double) count / (double) filter.getPageSize());
 		}
 
 		suitesData.setTotalPages(totalPages);
@@ -52,6 +57,7 @@ public class SuiteServiceImpl implements SuiteService {
 			List<SuiteData> suiteDataList = new ArrayList<SuiteData>();
 			for (Suite suite : suites) {
 				SuiteData data = new SuiteData(suite);
+				data.setEnv(getEnv(suite.getId()));
 				suiteDataList.add(data);
 			}
 			suitesData.setSuites(suiteDataList);
@@ -59,6 +65,25 @@ public class SuiteServiceImpl implements SuiteService {
 		} else {
 			return suitesData;
 		}
+	}
+
+	private String getEnv(String suiteId) {
+		List<Test> tests = testRepository.findTestsBySuiteId(suiteId);
+		if (tests != null && tests.size() > 0) {
+			for (Test test : tests) {
+				List<TestParameter> parameters = test.getParameters();
+				if (parameters != null && parameters.size() > 0) {
+					for (TestParameter p : parameters) {
+						if (p.getParamName().equalsIgnoreCase("env")) {
+							return p.getParamValue();
+
+						}
+					}
+				}
+			}
+		}
+
+		return "";
 	}
 
 	@Override
@@ -133,13 +158,12 @@ public class SuiteServiceImpl implements SuiteService {
 			date = date.minusDays(i);
 			SuitesData suites = findSuiteBefore(i);
 			LastActivity activity = new LastActivity();
-			if (suites != null && suites.getSuites() != null
-					&& suites.getSuites().size() > 0) {
+			if (suites != null && suites.getSuites() != null && suites.getSuites().size() > 0) {
 				for (SuiteData suite : suites.getSuites()) {
+					activity.addToAmountOfSkipped(suite.getNumberOfSkips());
 					activity.addToAmountOfFailed(suite.getNumberOfFails());
 					activity.addToAmountOfSuccess(suite.getNumberOfTests()
-							- (suite.getNumberOfFails() + suite
-									.getNumberOfSkips()));
+							- (suite.getNumberOfFails() + suite.getNumberOfSkips()));
 					activity.addToAmountOfTests(suite.getNumberOfTests());
 				}
 
@@ -158,6 +182,7 @@ public class SuiteServiceImpl implements SuiteService {
 		LastActivity activity = new LastActivity();
 		int successCount = 0;
 		int failedCount = 0;
+		int skipCount = 0;
 		SuitesData suites = findLast24HoursDistinct();
 		if (suites != null && suites.getSuites().size() > 0) {
 			for (SuiteData suite : suites.getSuites()) {
@@ -166,6 +191,7 @@ public class SuiteServiceImpl implements SuiteService {
 					successCount++;
 					break;
 				case SKIP:
+					skipCount++;
 				case FAILURE:
 					failedCount++;
 					break;
@@ -174,6 +200,7 @@ public class SuiteServiceImpl implements SuiteService {
 		}
 		activity.setAmountOfFailed(failedCount);
 		activity.setAmountOfSuccess(successCount);
+		activity.setAmountOfSkipped(skipCount);
 		return activity;
 	}
 
@@ -181,31 +208,31 @@ public class SuiteServiceImpl implements SuiteService {
 		LastActivity activity = new LastActivity();
 		int successCount = 0;
 		int failedCount = 0;
+		int skipCount = 0;
 		SuitesData suites = findLast24HoursDistinct();
 		if (suites != null && suites.getSuites().size() > 0) {
 			for (SuiteData suite : suites.getSuites()) {
 				failedCount = failedCount + suite.getNumberOfFails();
+				skipCount = skipCount + suite.getNumberOfSkips();
 				successCount = successCount
-						+ (suite.getNumberOfTests() - (suite.getNumberOfFails() + suite
-								.getNumberOfSkips()));
+						+ (suite.getNumberOfTests() - (suite.getNumberOfFails() + suite.getNumberOfSkips()));
 			}
 		}
 		activity.setAmountOfFailed(failedCount);
 		activity.setAmountOfSuccess(successCount);
+		activity.setAmountOfSkipped(skipCount);
 		return activity;
 
 	}
 
 	@Override
 	public PieChart getLast24HoursTests() {
-		return PieChart.convertToPieChart(calcTestsLastActivity(),
-				"Tests Activity", "Tests on the last 24 hours");
+		return PieChart.convertToPieChart(calcTestsLastActivity(), "Tests Activity", "Tests on the last 24 hours");
 	}
 
 	@Override
 	public PieChart getLast24HoursSuites() {
-		return PieChart.convertToPieChart(calcSuitesLastActivity(),
-				"Suites Activity", "Suites on the last 24 hours");
+		return PieChart.convertToPieChart(calcSuitesLastActivity(), "Suites Activity", "Suites on the last 24 hours");
 	}
 
 	@Override

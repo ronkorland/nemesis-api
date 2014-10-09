@@ -31,6 +31,7 @@ public class DefaultUsersInitializer {
 			newUser.addPermission("view");
 			newUser.addPermission("edit");
 			newUser.addPermission("delete");
+			newUser.setDaliyReport(false);
 			userRepository.create(newUser);
 		}
 
@@ -43,6 +44,7 @@ public class DefaultUsersInitializer {
 			newUser.addPermission("view");
 			newUser.addPermission("edit");
 			newUser.addPermission("delete");
+			newUser.setDaliyReport(false);
 			userRepository.create(newUser);
 		}
 
