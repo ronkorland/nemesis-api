@@ -17,5 +17,14 @@ steps:
 
 - script: |
     npm install -g @testim/testim-cli
-    testim --help
+    testim --name "demo demo demo" \
+    --token "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InVpZCI6ImNpOjJpVGhiNmliIiwiZW1haWwiOiJnaWxAdGVzdGltLmlvIn0sImlhdCI6MTQ5NTAyMDUxOX0.DElAUsrn2j7Y7frEnoBgkxf5YpXuS5OWdxS1SZtD1sE" \
+    --project "2iThb6ib" \
+    --host "dev-grid.testim.io"  \
+    --report-file testim-tests-report.xml
   displayName: 'npm install testim-cli and run tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/testim-tests-report.xml' 
