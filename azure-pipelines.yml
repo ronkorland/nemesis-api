@@ -10,5 +10,12 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- run: testim/docker-cli
-  cmd: --help
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install -g @testim/testim-cli
+    testim --help
+  displayName: 'npm install testim-cli and run tests'
