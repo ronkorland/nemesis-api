@@ -25,6 +25,7 @@ steps:
   displayName: 'npm install testim-cli and run tests'
 
 - task: PublishTestResults@2
+  displayName: 'publish testim test results'
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/testim-tests-report.xml' 
+    testResultsFiles: '**/testim-tests-report.xml'
